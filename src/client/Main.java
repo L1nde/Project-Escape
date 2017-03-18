@@ -11,14 +11,14 @@ import java.util.logging.Logger;
 
 public class Main extends StateBasedGame {
 
-    final private static int screenW = 800;
-    final private static int screenH = 600;
+    private static int screenW = 800;
+    private static int screenH = 600;
     private Main(String AppName){
         super(AppName);
     }
 
     public void initStatesList(GameContainer gc) throws SlickException {
-
+        this.addState(new Menu());
         this.addState(new InGame());
 
     }
@@ -30,6 +30,7 @@ public class Main extends StateBasedGame {
             AppGameContainer appgc;
             appgc = new AppGameContainer(new Main("Project Escape"));
             appgc.setDisplayMode(screenW, screenH, false);
+            appgc.setTargetFrameRate(60);
             appgc.start();
         }
         catch (SlickException ex)
