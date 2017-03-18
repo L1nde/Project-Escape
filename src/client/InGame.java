@@ -8,12 +8,18 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+
 /**
  * Created by Meelis Perli on 3/18/2017.
  */
 public class InGame extends BasicGameState {
 
     private Player player;
+    private boolean multiplayer = true;
 
     @Override
     public int getID() {
@@ -21,8 +27,9 @@ public class InGame extends BasicGameState {
     }
 
     @Override
-    public void init(GameContainer container, StateBasedGame game) throws SlickException {
+    public void init(GameContainer container, StateBasedGame game) throws SlickException{
         player = new Player(100,100,1);
+
     }
 
     @Override
@@ -36,6 +43,4 @@ public class InGame extends BasicGameState {
         g.fillRect(0,0, container.getWidth(), container.getHeight());
         player.render(container, g);
     }
-
-
 }

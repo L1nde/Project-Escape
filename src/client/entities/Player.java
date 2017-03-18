@@ -5,6 +5,11 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.Graphics;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+
 /**
  * Created by Meelis Perli on 3/18/2017.
  */
@@ -14,6 +19,7 @@ public class Player {
     private float speed;
     private int xSize = 20;
     private int ySize = 20;
+
 
     public Player(float x, float y, float speed) {
         this.x = x;
@@ -37,9 +43,11 @@ public class Player {
         if (input.isKeyDown(Input.KEY_RIGHT) || (input.isKeyDown(Input.KEY_D))) {
             x += speed;
         }
+
+
     }
     public void render(GameContainer gc, Graphics g) {
         g.setColor(Color.black);
-        g.drawRect(Math.round(x), Math.round(y), xSize, ySize);
+        g.fillRect(Math.round(x), Math.round(y), xSize, ySize);
     }
 }

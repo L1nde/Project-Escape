@@ -21,4 +21,4 @@ INSTALL GUIDE
 1) pull latest version.
 2) add src to sources root if it isnt
 3) edit main file configs
-4) to VM options add: "-Djava.library.path="<Path to lib>/natives-windows""
+4) to VM options add: "-Djava.library.path="(Path to lib)/natives-windows""

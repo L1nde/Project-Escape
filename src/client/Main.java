@@ -11,8 +11,8 @@ import java.util.logging.Logger;
 
 public class Main extends StateBasedGame {
 
-    private static int screenW = 1280;
-    private static int screenH = 800;
+    final private static int screenW = 800;
+    final private static int screenH = 600;
     private Main(String AppName){
         super(AppName);
     }
