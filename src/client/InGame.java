@@ -12,6 +12,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 /**
  * Created by Meelis Perli on 3/18/2017.
@@ -20,6 +21,7 @@ public class InGame extends BasicGameState {
 
     private Player player;
     private boolean multiplayer = true;
+    private Socket sock;
 
     @Override
     public int getID() {
@@ -29,12 +31,19 @@ public class InGame extends BasicGameState {
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException{
         player = new Player(100,100,1);
+        if (multiplayer) {
+            try {
+                this.sock = new Socket("localhost", 1337);
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
 
     }
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-        player.update(container);
+        player.update(container, sock);
     }
 
     @Override

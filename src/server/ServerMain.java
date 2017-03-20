@@ -20,7 +20,8 @@ public class ServerMain implements Runnable {
         try (DataInputStream is = new DataInputStream(sock.getInputStream())) {
             try (DataOutputStream os = new DataOutputStream(sock.getOutputStream())) {
                 while(true) {
-                    update(is, os);
+                    String s = is.readUTF();
+
                 }
 
             } catch (IOException e) {
@@ -30,8 +31,6 @@ public class ServerMain implements Runnable {
             throw new RuntimeException(e); //might be wrong, please fix if you know how to do it better
         }
     }
-    private void update(DataInputStream is, DataOutputStream os) {
 
-    }
 }
 
