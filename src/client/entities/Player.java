@@ -28,9 +28,16 @@ public class Player {
 
     }
 
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
     public void update(GameContainer gc, Socket sock) {
         Input input = gc.getInput();
-
         if (input.isKeyDown(Input.KEY_UP) || (input.isKeyDown(Input.KEY_W))) {
             y -= speed;
         }
@@ -43,16 +50,6 @@ public class Player {
         if (input.isKeyDown(Input.KEY_RIGHT) || (input.isKeyDown(Input.KEY_D))) {
             x += speed;
         }
-
-        if (sock != null) {
-            try(DataOutputStream os = new DataOutputStream(sock.getOutputStream())){
-                os.writeUTF(String.valueOf(x) + "|" + String.valueOf(y));
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-
-
     }
     public void render(GameContainer gc, Graphics g) {
         g.setColor(Color.black);
