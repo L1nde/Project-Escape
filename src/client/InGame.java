@@ -60,19 +60,25 @@ public class InGame extends BasicGameState {
             dos.writeUTF(s);
             dos.flush();
             String input = dis.readUTF();
-            System.out.println(input);
             String[] data = input.split("/");
             int temp = Integer.parseInt(data[0]);
+            int id = Integer.parseInt(data[1]);
             if (playersNumber < temp){
                 playersNumber = temp;
                 otherPlayers.add(new otherPlayer(playersNumber*100, 100, 1));
             }
+            System.out.println(otherPlayers.size() + "|" + playersNumber + "|" + id);
             if (playersNumber > 1){
-                for (otherPlayer otherPlayer : otherPlayers) {
-                if (!data[0].equals("null") && !data[1].equals("null") && !data[2].equals("null")&&!data[0].equals("-1") && !data[1].equals("-1") && !data[2].equals("-1")){
-                    otherPlayer.setX(Float.parseFloat(data[1]));
-                    otherPlayer.setY(Float.parseFloat(data[2]));
-                }
+                for (int i = 0; i < otherPlayers.size(); i++) {
+                    otherPlayer otherPlayer = otherPlayers.get(i);
+                    if (!data[0].equals("null") && !data[1].equals("null") && !data[2].equals("null") && !data[3].equals("null") && !data[0].equals("-1") && !data[1].equals("-1") && !data[2].equals("-1") && !data[3].equals("-1")) {
+
+                            otherPlayer.setX(Float.parseFloat(data[2]));
+                            otherPlayer.setY(Float.parseFloat(data[3]));
+
+
+
+                    }
 
                 }
             }

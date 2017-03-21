@@ -33,7 +33,6 @@ public class otherPlayer {
     }
 
     public void render(GameContainer gc, Graphics g) {
-        System.out.println(x + "|" + y);
         g.setColor(Color.black);
         g.fillRect(Math.round(x), Math.round(y), xSize, ySize);
     }

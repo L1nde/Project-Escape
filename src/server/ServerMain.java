@@ -29,21 +29,20 @@ public class ServerMain implements Runnable {
         try (DataInputStream is = new DataInputStream(sock.getInputStream())) {
             try (DataOutputStream os = new DataOutputStream(sock.getOutputStream())) {
                 while(true) {
-                    data.get(id).offer(is.readUTF());
-                    System.out.println(data.size());
-                    for (int i = 0; i < data.size(); i++) {
-                        if (id != i) {
-                            String s = data.get(i).take();
-                            System.out.println(s);
-                            os.writeUTF(String.valueOf(data.size() + "/" + s));
-                            os.flush();
-                        } else {
-                            os.writeUTF(String.valueOf("-1/-1/-1"));
-                            os.flush();
+                    String datum = String.valueOf(id + "/" + is.readUTF());
 
+                    for (int i = 0; i < data.size(); i++) {
+                        if (id != i){
+                            data.get(i).offer(datum);
                         }
                     }
-                }
+                    String s = data.get(id).take();
+                    os.writeUTF(String.valueOf(data.size() + "/" + s));
+                    os.flush();
+
+                    }
+
+
             } catch (IOException | InterruptedException e) {
 //                throw new RuntimeException(e); //might be wrong, please fix if you know how to do it better
                 System.out.println(e.getMessage());

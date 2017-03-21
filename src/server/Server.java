@@ -25,7 +25,7 @@ public class Server {
                 try {
                     Socket sock = ss.accept();
                     System.out.println("new");
-                    data.add(new ArrayBlockingQueue<String>(1));
+                    data.add(new ArrayBlockingQueue<String>(100));
                     threadList.add(new Thread(new ServerMain(sock, data, id++)));
                     threadList.get(threadList.size()-1).start();
 
