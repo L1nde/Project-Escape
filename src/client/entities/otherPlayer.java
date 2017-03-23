@@ -15,12 +15,14 @@ public class otherPlayer {
     private float speed;
     private int xSize = 20;
     private int ySize = 20;
+    private int id;
 
 
-    public otherPlayer(float x, float y, float speed) {
+    public otherPlayer(float x, float y, float speed, int id) {
         this.x = x;
         this.y = y;
         this.speed = speed;
+        this.id = id;
 
     }
 
@@ -30,6 +32,10 @@ public class otherPlayer {
 
     public void setY(float y) {
         this.y = y;
+    }
+
+    public int getId(){
+        return id;
     }
 
     public void render(GameContainer gc, Graphics g) {

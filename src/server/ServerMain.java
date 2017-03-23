@@ -2,11 +2,11 @@ package server;
 
 import jdk.nashorn.internal.ir.Block;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 
@@ -16,7 +16,9 @@ import java.util.concurrent.BlockingQueue;
 public class ServerMain implements Runnable {
     private Socket sock;
     private List<BlockingQueue<String>> data;
+    private float speed = 1;
     private int id;
+    private float[] playersCoords = {100, 100};
 
     public ServerMain(Socket sock, List<BlockingQueue<String>> data, int id) {
         this.sock = sock;
@@ -26,24 +28,18 @@ public class ServerMain implements Runnable {
 
     @Override
     public void run() {
-        try (DataInputStream is = new DataInputStream(sock.getInputStream())) {
-            try (DataOutputStream os = new DataOutputStream(sock.getOutputStream())) {
+        try (DataInputStream dis = new DataInputStream(sock.getInputStream())) {
+            try (DataOutputStream dos = new DataOutputStream(sock.getOutputStream())) {
                 while(true) {
-                    String datum = String.valueOf(id + "/" + is.readUTF());
-
-                    for (int i = 0; i < data.size(); i++) {
-                        if (id != i){
-                            data.get(i).offer(datum);
-                        }
+                    System.out.println(data);
+                    String receiveData = dis.readUTF();
+                    System.out.println(receiveData);
+                    for (Queue<String> datum : data) {
+                        datum.offer(calculatePositions(receiveData));
                     }
-                    String s = data.get(id).take();
-                    os.writeUTF(String.valueOf(data.size() + "/" + s));
-                    os.flush();
-
-                    }
-
-
-            } catch (IOException | InterruptedException e) {
+                    dos.writeUTF(data.get(id).remove());
+                }
+            } catch (IOException e) {
 //                throw new RuntimeException(e); //might be wrong, please fix if you know how to do it better
                 System.out.println(e.getMessage());
             }
@@ -53,5 +49,20 @@ public class ServerMain implements Runnable {
         }
     }
 
+    public String calculatePositions(String input){
+        if (input.contains("up")){
+            playersCoords[1] -= speed;
+        }
+        if (input.contains("down")){
+            playersCoords[1] += speed;
+        }
+        if (input.contains("left")){
+            playersCoords[0] -= speed;
+        }
+        if (input.contains("right")){
+            playersCoords[0] += speed;
+        }
+        return String.valueOf(id + "/" + playersCoords[0] + "/" + playersCoords[1]);
+    }
 }
 

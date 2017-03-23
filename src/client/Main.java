@@ -1,11 +1,9 @@
 package client;
 
-import client.InGame;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,7 +18,6 @@ public class Main extends StateBasedGame {
     public void initStatesList(GameContainer gc) throws SlickException {
         this.addState(new Menu());
         this.addState(new InGame());
-
     }
 
     public static void main(String[] args) {
@@ -30,7 +27,7 @@ public class Main extends StateBasedGame {
             AppGameContainer appgc;
             appgc = new AppGameContainer(new Main("Project Escape"));
             appgc.setDisplayMode(screenW, screenH, false);
-            appgc.setTargetFrameRate(60);
+//            appgc.setTargetFrameRate(60);
             appgc.start();
         }
         catch (SlickException ex)

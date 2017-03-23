@@ -16,41 +16,43 @@ import java.net.Socket;
 public class Player {
     private float x;
     private float y;
-    private float speed;
+    private int id;
     private int xSize = 20;
     private int ySize = 20;
 
 
-    public Player(float x, float y, float speed) {
+    public Player(float x, float y) {
         this.x = x;
         this.y = y;
-        this.speed = speed;
+        this.id = id;
 
     }
 
-    public float getX() {
-        return x;
+    public void setX(float x) {
+        this.x = x;
     }
 
-    public float getY() {
-        return y;
+    public void setY(float y) {
+        this.y = y;
     }
 
-    public void update(GameContainer gc, Socket sock) {
+    public String update(GameContainer gc) {
         Input input = gc.getInput();
         if (input.isKeyDown(Input.KEY_UP) || (input.isKeyDown(Input.KEY_W))) {
-            y -= speed;
+            return String.valueOf("up");
         }
         if (input.isKeyDown(Input.KEY_DOWN) || (input.isKeyDown(Input.KEY_S))) {
-            y += speed;
+            return String.valueOf("down");
         }
         if (input.isKeyDown(Input.KEY_LEFT) || (input.isKeyDown(Input.KEY_A))) {
-            x -= speed;
+            return String.valueOf("left");
         }
         if (input.isKeyDown(Input.KEY_RIGHT) || (input.isKeyDown(Input.KEY_D))) {
-            x += speed;
+            return String.valueOf("right");
         }
+        return "nothing";
     }
+
     public void render(GameContainer gc, Graphics g) {
         g.setColor(Color.black);
         g.fillRect(Math.round(x), Math.round(y), xSize, ySize);
