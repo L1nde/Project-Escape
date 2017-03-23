@@ -1,7 +1,6 @@
 package client;
 
 import client.entities.Player;
-import client.entities.otherPlayer;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -28,6 +27,7 @@ public class InGame extends BasicGameState {
     private DataInputStream dis;
     private DataOutputStream dos;
 
+
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException{
         players.add(new Player(100,100));
@@ -47,24 +47,24 @@ public class InGame extends BasicGameState {
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         try {
             String sendData = players.get(0).update(container);
-            if (!sendData.equals("nothing")){
 
-                dos.writeUTF(sendData);
 
-                String input = dis.readUTF();
-                String[] dataInput = input.split("/");
-                int id = Integer.parseInt(dataInput[0]);
-                if (id == playerCount){
-                    players.add(new Player(100, 100));
-                    playerCount++;
-                }
-                for (int i = 0; i < players.size(); i++) {
-                    if(id == i){
-                        players.get(i).setX(Float.parseFloat(dataInput[1]));
-                        players.get(i).setY(Float.parseFloat(dataInput[2]));
-                    }
+            dos.writeUTF(sendData);
+
+            String input = dis.readUTF();
+            String[] dataInput = input.split("/");
+            int id = Integer.parseInt(dataInput[0]);
+            if (id == playerCount){
+                players.add(new Player(100, 100));
+                playerCount++;
+            }
+            for (int i = 0; i < players.size(); i++) {
+                if(id == i){
+                    players.get(i).setX(Float.parseFloat(dataInput[1]));
+                    players.get(i).setY(Float.parseFloat(dataInput[2]));
                 }
             }
+
 
         } catch (IOException e) {
 //            throw new RuntimeException(e);

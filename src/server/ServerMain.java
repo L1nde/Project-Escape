@@ -20,6 +20,7 @@ public class ServerMain implements Runnable {
     private int id;
     private float[] playersCoords = {100, 100};
 
+
     public ServerMain(Socket sock, List<BlockingQueue<String>> data, int id) {
         this.sock = sock;
         this.data = data;
@@ -31,15 +32,15 @@ public class ServerMain implements Runnable {
         try (DataInputStream dis = new DataInputStream(sock.getInputStream())) {
             try (DataOutputStream dos = new DataOutputStream(sock.getOutputStream())) {
                 while(true) {
-                    System.out.println(data);
                     String receiveData = dis.readUTF();
-                    System.out.println(receiveData);
-                    for (Queue<String> datum : data) {
+                    for (BlockingQueue<String> datum : data) {
                         datum.offer(calculatePositions(receiveData));
                     }
-                    dos.writeUTF(data.get(id).remove());
+                    String temp = data.get(id).take();
+                    System.out.println(temp);
+                    dos.writeUTF(temp);
                 }
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
 //                throw new RuntimeException(e); //might be wrong, please fix if you know how to do it better
                 System.out.println(e.getMessage());
             }
