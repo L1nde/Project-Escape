@@ -13,6 +13,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 
 /**
@@ -23,21 +25,18 @@ public class InGame extends BasicGameState {
     private List<Player> players = new ArrayList<>();
     private int playerCount = 1;
     private boolean multiplayer = true;
-    private Socket sock;
-    private DataInputStream dis;
-    private DataOutputStream dos;
-
+    private BlockingQueue<String> receiveData = new ArrayBlockingQueue<String>(1);
+    private BlockingQueue<String> sendData = new ArrayBlockingQueue<String>(1);
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException{
-        players.add(new Player(100,100));
         container.setAlwaysRender(true);
         if (multiplayer) {
+           new Thread(new Communicator(sendData, receiveData)).start();
             try {
-                this.sock = new Socket("localhost", 1337);
-                this.dis = new DataInputStream(sock.getInputStream());
-                this.dos = new DataOutputStream(sock.getOutputStream());
-            } catch (IOException e) {
+                players.add(new Player(100, 100));
+                receiveData.put("0/100/100");
+            } catch (InterruptedException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -46,18 +45,18 @@ public class InGame extends BasicGameState {
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         try {
-            String sendData = players.get(0).update(container);
 
 
-            dos.writeUTF(sendData);
 
-            String input = dis.readUTF();
+            String input = receiveData.take();
             String[] dataInput = input.split("/");
             int id = Integer.parseInt(dataInput[0]);
             if (id == playerCount){
                 players.add(new Player(100, 100));
                 playerCount++;
             }
+            String data = players.get(0).update(container);
+            sendData.put(data);
             for (int i = 0; i < players.size(); i++) {
                 if(id == i){
                     players.get(i).setX(Float.parseFloat(dataInput[1]));
@@ -66,7 +65,7 @@ public class InGame extends BasicGameState {
             }
 
 
-        } catch (IOException e) {
+        } catch (InterruptedException e) {
 //            throw new RuntimeException(e);
             System.out.println(e.getMessage());
         }

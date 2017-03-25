@@ -20,7 +20,7 @@ public class Server {
             while (true) {
                 try {
                     Socket sock = ss.accept();
-                    data.add(new ArrayBlockingQueue<>(10));
+                    data.add(new ArrayBlockingQueue<>(1));
                     threadList.add(new Thread(new ServerMain(sock, data, id++)));
                     threadList.get(threadList.size()-1).start();
                 } catch (IOException e) {
