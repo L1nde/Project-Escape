@@ -31,7 +31,7 @@ public class Communicator implements Runnable {
     public void run() {
         while (true){
             try {
-                String s = sendData.take();
+                String s = sendData.take(); //Muutuja nimed ajutised
                 dos.writeUTF(s);
                 String u = dis.readUTF();
                 System.out.println(u);

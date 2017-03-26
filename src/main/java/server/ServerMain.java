@@ -34,13 +34,8 @@ public class ServerMain implements Runnable {
                 while(true) {
                     String receiveData = dis.readUTF();
                     for (BlockingQueue<String> datum : data) {
-                        if (datum.remainingCapacity() == 0){
-                            datum.poll();
-                        }
-                        datum.put(calculatePositions(receiveData));
+                        datum.offer(calculatePositions(receiveData));
                     }
-
-
                     System.out.println(data);
                     String temp = data.get(id).take();
                     dos.writeUTF(temp);
