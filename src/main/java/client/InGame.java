@@ -32,10 +32,10 @@ public class InGame extends BasicGameState {
     public void init(GameContainer container, StateBasedGame game) throws SlickException{
         container.setAlwaysRender(true);
         if (multiplayer) {
-           new Thread(new Communicator(sendData, receiveData)).start();
+            new Thread(new Communicator(sendData, receiveData)).start();
             try {
                 players.add(new Player(100, 100));
-                receiveData.put("0/100/100");
+                sendData.put("0/100/100");
             } catch (InterruptedException e) {
                 System.out.println(e.getMessage());
             }
@@ -46,24 +46,24 @@ public class InGame extends BasicGameState {
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         try {
 
-
-
             String input = receiveData.take();
-            String[] dataInput = input.split("/");
-            int id = Integer.parseInt(dataInput[0]);
-            if (id == playerCount){
-                players.add(new Player(100, 100));
-                playerCount++;
+            String[] dataInput = input.split(" ");
+
+            for (String s : dataInput) {
+                String[] dataInput2 = s.split("/");
+                int id = Integer.parseInt(dataInput2[0]);
+                if (id == playerCount){
+                    players.add(new Player(100, 100));
+                    playerCount++;
+                    System.out.println("added");
+                }
+                if (id <= playerCount) {
+                    players.get(id).setX(Float.parseFloat(dataInput2[1]));
+                    players.get(id).setY(Float.parseFloat(dataInput2[2]));
+                }
             }
             String data = players.get(0).update(container);
             sendData.put(data);
-            for (int i = 0; i < players.size(); i++) {
-                if(id == i){
-                    players.get(i).setX(Float.parseFloat(dataInput[1]));
-                    players.get(i).setY(Float.parseFloat(dataInput[2]));
-                }
-            }
-
 
         } catch (InterruptedException e) {
 //            throw new RuntimeException(e);

@@ -16,7 +16,6 @@ import java.net.Socket;
 public class Player {
     private float x;
     private float y;
-    private int id;
     private int xSize = 20;
     private int ySize = 20;
 
@@ -24,7 +23,6 @@ public class Player {
     public Player(float x, float y) {
         this.x = x;
         this.y = y;
-        this.id = id;
 
     }
 

@@ -34,7 +34,7 @@ public class Communicator implements Runnable {
                 String s = sendData.take(); //Muutuja nimed ajutised
                 dos.writeUTF(s);
                 String u = dis.readUTF();
-                System.out.println(u);
+                //System.out.println(u);
                 receiveData.put(u);
             } catch (IOException | InterruptedException e) {
                 System.out.println(e.getMessage());

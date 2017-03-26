@@ -31,22 +31,25 @@ public class ServerMain implements Runnable {
     public void run() {
         try (DataInputStream dis = new DataInputStream(sock.getInputStream())) {
             try (DataOutputStream dos = new DataOutputStream(sock.getOutputStream())) {
+
                 while(true) {
                     String receiveData = dis.readUTF();
                     for (BlockingQueue<String> datum : data) {
                         datum.offer(calculatePositions(receiveData));
                     }
-                    System.out.println(data);
-                    String temp = data.get(id).take();
+                    String temp = "";
+                    for (int i = 0; i < data.size(); i++) {
+                        temp += data.get(id).take() + " ";
+                    }
                     dos.writeUTF(temp);
                     dos.flush();
                 }
-            } catch (IOException | InterruptedException e) {
-//                throw new RuntimeException(e); //might be wrong, please fix if you know how to do it better
+            } catch (IOException e) {
                 System.out.println(e.getMessage());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         } catch (IOException e) {
-//            throw new RuntimeException(e); //might be wrong, please fix if you know how to do it better
             System.out.println(e.getMessage());
         }
     }
