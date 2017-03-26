@@ -34,11 +34,17 @@ public class ServerMain implements Runnable {
                 while(true) {
                     String receiveData = dis.readUTF();
                     for (BlockingQueue<String> datum : data) {
-                        datum.offer(calculatePositions(receiveData));
+                        if (datum.remainingCapacity() == 0){
+                            datum.poll();
+                        }
+                        datum.put(calculatePositions(receiveData));
                     }
+
+
+                    System.out.println(data);
                     String temp = data.get(id).take();
-                    System.out.println(temp);
                     dos.writeUTF(temp);
+                    dos.flush();
                 }
             } catch (IOException | InterruptedException e) {
 //                throw new RuntimeException(e); //might be wrong, please fix if you know how to do it better

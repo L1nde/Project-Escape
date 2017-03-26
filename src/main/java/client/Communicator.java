@@ -31,14 +31,11 @@ public class Communicator implements Runnable {
     public void run() {
         while (true){
             try {
-                System.out.println(12);
                 String s = sendData.take();
-                System.out.println(s);
                 dos.writeUTF(s);
-                System.out.println(13);
                 String u = dis.readUTF();
-                System.out.println(1);
-                receiveData.offer(u);
+                System.out.println(u);
+                receiveData.put(u);
             } catch (IOException | InterruptedException e) {
                 System.out.println(e.getMessage());
             }
