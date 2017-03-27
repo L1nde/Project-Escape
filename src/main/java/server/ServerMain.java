@@ -34,9 +34,13 @@ public class ServerMain implements Runnable {
 
                 while(true) {
                     String receiveData = dis.readUTF();
+                    String d = calculatePositions(receiveData);
                     for (BlockingQueue<String> datum : data) {
-                        datum.offer(calculatePositions(receiveData));
+                        datum.offer(d);
                     }
+                    //for (BlockingQueue<String> datum : data) {
+                    //    System.out.println(datum.size());
+                    //}
                     String temp = "";
                     for (int i = 0; i < data.size(); i++) {
                         if (data.get(id).peek() == null){
