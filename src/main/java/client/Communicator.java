@@ -31,12 +31,19 @@ public class Communicator implements Runnable {
     public void run() {
         while (true){
             try {
-                String s = sendData.take(); //Muutuja nimed ajutised
+                String s = "";
+                if (sendData.peek() == null){
+                    s = "nothing";
+                }
+                else{
+                    s = sendData.poll(); //Muutuja nimed ajutised
+
+                }
                 dos.writeUTF(s);
                 String u = dis.readUTF();
-                //System.out.println(u);
-                receiveData.put(u);
-            } catch (IOException | InterruptedException e) {
+                System.out.println(u);
+                receiveData.offer(u);
+            } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
         }
