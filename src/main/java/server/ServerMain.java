@@ -43,19 +43,12 @@ public class ServerMain implements Runnable {
                     //}
                     String temp = "";
                     for (int i = 0; i < data.size(); i++) {
-                        if (data.get(id).peek() == null){
-                            temp += calculatePositions("nothing");
-                        }
-                        else{
-                            temp += data.get(id).poll() + " ";
-
-                        }
+                        temp += data.get(id).take() + " ";
                     }
-                    System.out.println(temp);
                     dos.writeUTF(temp);
                     dos.flush();
                 }
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 System.out.println(e.getMessage());
             }
         } catch (IOException e) {
