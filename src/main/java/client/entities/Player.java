@@ -5,10 +5,6 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.Graphics;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
 
 /**
  * Created by Meelis Perli on 3/18/2017.
@@ -19,11 +15,9 @@ public class Player {
     private int xSize = 20;
     private int ySize = 20;
 
-
     public Player(float x, float y) {
         this.x = x;
         this.y = y;
-
     }
 
     public void setX(float x) {
@@ -52,7 +46,7 @@ public class Player {
     }
 
     public void render(GameContainer gc, Graphics g) {
-        g.setColor(Color.black);
-        g.fillRect(Math.round(x), Math.round(y), xSize, ySize);
+        g.setColor(Color.yellow);
+        g.fillArc(Math.round(x), Math.round(y), xSize, ySize, 0, 300);
     }
 }

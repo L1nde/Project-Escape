@@ -33,6 +33,5 @@ public class Main extends StateBasedGame {
         {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 }

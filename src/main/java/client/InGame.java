@@ -8,11 +8,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import java.io.*;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -25,8 +22,8 @@ public class InGame extends BasicGameState {
     private List<Player> players = new ArrayList<>();
     private int playerCount = 1;
     private boolean multiplayer = true;
-    private BlockingQueue<String> receiveData = new ArrayBlockingQueue<String>(1);
-    private BlockingQueue<String> sendData = new ArrayBlockingQueue<String>(1);
+    private BlockingQueue<String> receiveData = new ArrayBlockingQueue<>(1);
+    private BlockingQueue<String> sendData = new ArrayBlockingQueue<>(1);
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException{
@@ -44,11 +41,9 @@ public class InGame extends BasicGameState {
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-        try {
-
-            String input = receiveData.take();
+            String input = receiveData.poll();
+        if (input != null){
             String[] dataInput = input.split(" ");
-
             for (String s : dataInput) {
                 String[] dataInput2 = s.split("/");
                 int id = Integer.parseInt(dataInput2[0]);
@@ -62,14 +57,15 @@ public class InGame extends BasicGameState {
                     players.get(id).setY(Float.parseFloat(dataInput2[2]));
                 }
             }
-            String data = players.get(0).update(container);
-            sendData.put(data);
 
-        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-            System.out.println(e.getMessage());
+            }
+            String data = players.get(0).update(container);
+            sendData.offer(data);
+
         }
-    }
+
+
+
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
