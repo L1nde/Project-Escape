@@ -1,12 +1,14 @@
 package server;
 
 
+import general.PlayerInputState;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by Meelis Perli on 3/18/2017.
@@ -14,17 +16,25 @@ import java.util.concurrent.BlockingQueue;
 public class Server {
     public static void main(String[] args) throws IOException {
         List<Thread> threadList = new ArrayList<>();
-        List<BlockingQueue<String>> data = new ArrayList<>();
-        int id = 0;
+        int freePublicID = 0;
+        Map<UUID, Integer> privateToPublicID = Collections.synchronizedMap(new HashMap<UUID, Integer>());
+        Map<Integer, Thread> communicatorThreads = Collections.synchronizedMap(new HashMap<Integer, Thread>());
+        ServerTicker ticker = new ServerTicker();
+        Thread tickerThread = new Thread(ticker);
+        tickerThread.start();
+        threadList.add(tickerThread);
         try (ServerSocket ss = new ServerSocket(1337)) {
             while (true) {
                 try {
                     Socket sock = ss.accept();
-                    data.add(new ArrayBlockingQueue<>(8)); // max players
-                    threadList.add(new Thread(new ServerMain(sock, data, id++)));
-                    threadList.get(threadList.size()-1).start();
-                } catch (IOException e) {
-                    System.out.println(e.getMessage()); // nii ikka võis teha?
+                    ServerCommunicator communicator = new ServerCommunicator(
+                            privateToPublicID, communicatorThreads, freePublicID, sock, ticker);
+                    ++freePublicID;
+                    Thread communicatorThread = new Thread(communicator);
+                    communicatorThread.start();
+                    threadList.add(communicatorThread);
+                } catch (IOException exp) {
+                    exp.printStackTrace();
                 }
             }
         }

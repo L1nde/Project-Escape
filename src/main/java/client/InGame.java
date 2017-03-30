@@ -1,6 +1,10 @@
 package client;
 
 import client.entities.Player;
+import general.GameState;
+import general.PlayerInputState;
+
+import general.PlayerState;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -9,39 +13,43 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 
 /**
  * Created by Meelis Perli on 3/18/2017.
  */
 public class InGame extends BasicGameState {
-
-    private List<Player> players = new ArrayList<>();
+    private GameState gameState = new GameState(-1, 0);
     private int playerCount = 1;
     private boolean multiplayer = true;
-    private BlockingQueue<String> receiveData = new ArrayBlockingQueue<>(1);
-    private BlockingQueue<String> sendData = new ArrayBlockingQueue<>(1);
-
+    private boolean communicatorCreated = false;
+    private BlockingQueue<GameState> receiveData = new LinkedBlockingQueue<>();
+    private BlockingQueue<PlayerInputState> sendData = new LinkedBlockingQueue<>();
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException{
         container.setAlwaysRender(true);
-        if (multiplayer) {
-            new Thread(new Communicator(sendData, receiveData)).start();
-            try {
-                players.add(new Player(100, 100));
-                sendData.put("0/100/100");
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
-            }
-        }
     }
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-            String input = receiveData.poll();
+        if (multiplayer && !communicatorCreated) {
+            new Thread(new Communicator(sendData, receiveData)).start();
+            communicatorCreated = true;
+        }
+        ArrayList<GameState> receivedGameStates = new ArrayList<>();
+        receiveData.drainTo(receivedGameStates);
+        if(!receivedGameStates.isEmpty()){
+            GameState mostRecentReceived = Collections.max(receivedGameStates);
+            if(mostRecentReceived.compareTo(gameState) == 1){
+                gameState = mostRecentReceived;
+            }
+        }
+        /*
+        String input = receiveData.poll();
         if (input != null){
             String[] dataInput = input.split(" ");
             for (String s : dataInput) {
@@ -57,12 +65,12 @@ public class InGame extends BasicGameState {
                     players.get(id).setY(Float.parseFloat(dataInput2[2]));
                 }
             }
-
-            }
-            String data = players.get(0).update(container);
-            sendData.offer(data);
-
         }
+        */
+        PlayerInputState freshInput = PlayerInputReceiver.receive(container);
+        sendData.add(freshInput);
+    }
+
 
 
 
@@ -71,7 +79,9 @@ public class InGame extends BasicGameState {
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         g.setColor(Color.green);
         g.fillRect(0,0, container.getWidth(), container.getHeight());
-        for (Player player : players) {
+
+        for(Map.Entry<Integer, PlayerState> entry : gameState.getPlayerStates().entrySet()){
+            Player player = new Player(entry.getValue());
             player.render(container, g);
         }
     }

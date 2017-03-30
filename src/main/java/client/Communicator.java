@@ -2,42 +2,64 @@ package client;/*
  * Created by L1ND3 on 23.03.2017. 
  */
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import general.GameState;
+import general.PlayerInputState;
+
+import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.FutureTask;
 
 public class Communicator implements Runnable {
-    private Socket socket;
-    private DataInputStream dis;
-    private DataOutputStream dos;
-    private BlockingQueue<String> receiveData;
-    private BlockingQueue<String> sendData;
+    private int maxTries = 10;
+    private BlockingQueue<GameState> receiveData;
+    private BlockingQueue<PlayerInputState> sendData;
 
-    public Communicator(BlockingQueue<String> sendData, BlockingQueue<String> receiveData) {
-        try {
-            this.socket = new Socket("localhost", 1337);
-            this.dis = new DataInputStream(socket.getInputStream());
-            this.dos = new DataOutputStream(socket.getOutputStream());
-            this.sendData = sendData;
-            this.receiveData = receiveData;
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+    public Communicator(BlockingQueue<PlayerInputState> sendData, BlockingQueue<GameState> receiveData) {
+        this.sendData = sendData;
+        this.receiveData = receiveData;
     }
 
     @Override
     public void run() {
-        while (true){
+        UUID uuid = UUID.randomUUID();
+        for(int i = 0; i < maxTries; ++i){
+            Socket sock = new Socket();
             try {
-                String s = sendData.take(); //Muutuja nimed ajutised
-                dos.writeUTF(s);
-                String u = dis.readUTF();
-                //System.out.println(u);
-                receiveData.put(u);
-            } catch (IOException | InterruptedException e) {
-                System.out.println(e.getMessage());
+                sock.connect(new InetSocketAddress("localhost", 1337), 1000);
+                sock.setSoTimeout(1000);
+                //ObjectInputStream tries to gets an object internally when created.
+                try(ObjectOutputStream netOut = new ObjectOutputStream(sock.getOutputStream())){
+                    netOut.writeObject(uuid);
+                    netOut.flush();
+                    try(ObjectInputStream netIn = new ObjectInputStream(sock.getInputStream())){
+                        int id = netIn.readInt();
+                        Sender sender = new Sender(sendData, netOut);
+                        Receiver receiver = new Receiver(netIn, receiveData);
+                        FutureTask senderTask = new FutureTask(sender);
+                        Thread senderThread = new Thread(senderTask);
+                        senderThread.start();
+                        try{
+                            receiver.call();
+                        } finally {
+                            if(!senderTask.cancel(true)){
+                                senderTask.get();
+                            }
+                        }
+                    }
+                }
+            } catch (Exception exp){
+                exp.printStackTrace();
+            } finally{
+                if(sock.isConnected() && !sock.isClosed()){
+                    try{
+                        sock.close();
+                    } catch (Exception exp){
+                        exp.printStackTrace();
+                    }
+                }
             }
         }
     }
