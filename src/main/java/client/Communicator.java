@@ -13,7 +13,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.FutureTask;
 
 public class Communicator implements Runnable {
-    private int maxTries = 10;
+    private int maxTries = 1000;
     private BlockingQueue<GameState> receiveData;
     private BlockingQueue<PlayerInputState> sendData;
 
