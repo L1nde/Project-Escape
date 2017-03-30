@@ -1,4 +1,5 @@
-package client;/*
+package client;
+/*
  * Created by L1ND3 on 23.03.2017. 
  */
 
@@ -11,6 +12,8 @@ import java.net.Socket;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.FutureTask;
+
+import static java.lang.Thread.sleep;
 
 public class Communicator implements Runnable {
     private int maxTries = 1000;
@@ -60,6 +63,11 @@ public class Communicator implements Runnable {
                         exp.printStackTrace();
                     }
                 }
+            }
+            try{
+                sleep(1000);
+            } catch (Exception exp){
+                throw new RuntimeException(exp);
             }
         }
     }

@@ -48,25 +48,6 @@ public class InGame extends BasicGameState {
                 gameState = mostRecentReceived;
             }
         }
-        /*
-        String input = receiveData.poll();
-        if (input != null){
-            String[] dataInput = input.split(" ");
-            for (String s : dataInput) {
-                String[] dataInput2 = s.split("/");
-                int id = Integer.parseInt(dataInput2[0]);
-                if (id == playerCount){
-                    players.add(new Player(100, 100));
-                    playerCount++;
-                    System.out.println("added");
-                }
-                if (id <= playerCount) {
-                    players.get(id).setX(Float.parseFloat(dataInput2[1]));
-                    players.get(id).setY(Float.parseFloat(dataInput2[2]));
-                }
-            }
-        }
-        */
         PlayerInputState freshInput = PlayerInputReceiver.receive(container);
         sendData.add(freshInput);
     }

@@ -1,8 +1,5 @@
 package server;
 
-import general.GameState;
-import general.PlayerInputState;
-
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;

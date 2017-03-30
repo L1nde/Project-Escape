@@ -1,6 +1,5 @@
 package client.entities;
 
-import general.PlayerInputState;
 import general.PlayerState;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;

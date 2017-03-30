@@ -11,8 +11,6 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.LockSupport;
 
-import static java.lang.Thread.sleep;
-
 /**
  * Created by Meelis Perli on 3/18/2017.
  */
@@ -66,7 +64,7 @@ public class ServerTicker implements Runnable {
                 }
             }
             nextTickStart += tickDelay/1e6;
-            //while(System.nanoTime() < parkUntil){}
+            //while(System.currentTimeMillis() < nextTickStart){}
             //All sleep methods are OS limited(1ms on linux ~10 ms on Windows)
             LockSupport.parkUntil(nextTickStart);
         }
