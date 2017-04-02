@@ -13,8 +13,8 @@ import org.newdawn.slick.Graphics;
  */
 public class Player{
     private PlayerState state;
-    private int xSize = 20;
-    private int ySize = 20;
+    private int xSize = 18;
+    private int ySize = 18;
 
     public Player(PlayerState state) {
         this.state = state;
