@@ -27,7 +27,7 @@ public class Main extends StateBasedGame {
             AppGameContainer appgc;
             appgc = new AppGameContainer(new Main("Project Escape"));
             appgc.setDisplayMode(screenW, screenH, false);
-            appgc.setTargetFrameRate(60);
+            appgc.setTargetFrameRate(6000);
             appgc.start();
         }
         catch (SlickException ex)

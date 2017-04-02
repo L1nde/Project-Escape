@@ -1,14 +1,10 @@
 package server;
 
 
-import general.PlayerInputState;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by Meelis Perli on 3/18/2017.
@@ -23,12 +19,13 @@ public class Server {
         Thread tickerThread = new Thread(ticker);
         tickerThread.start();
         threadList.add(tickerThread);
+        MazeMap map = new MazeMap(800,600); //selle peaks paremini tegema, praegu hardcoded, kuna tahan kiiresti testida
         try (ServerSocket ss = new ServerSocket(1337)) {
             while (true) {
                 try {
                     Socket sock = ss.accept();
                     ServerCommunicator communicator = new ServerCommunicator(
-                            privateToPublicID, communicatorThreads, freePublicID, sock, ticker);
+                            privateToPublicID, communicatorThreads, freePublicID, sock, ticker, map);
                     ++freePublicID;
                     Thread communicatorThread = new Thread(communicator);
                     communicatorThread.start();

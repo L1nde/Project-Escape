@@ -1,8 +1,5 @@
 package server;
 
-import general.GameState;
-import general.PlayerInputState;
-
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
@@ -16,18 +13,21 @@ public class ServerCommunicator implements Runnable{
     final private int freePublicId;
     final private Socket sock;
     final private ServerTicker ticker;
+    private MazeMap map;
 
     public ServerCommunicator(Map<UUID, Integer> privateToPublicID, //Needs to be synchronized
                               Map<Integer, Thread> communicatorThreads, //Needs to be synchronized
                               int freePublicId,
                               Socket sock,
-                              ServerTicker ticker) throws SocketException {
+                              ServerTicker ticker, MazeMap map) throws SocketException {
         this.privateToPublicID = privateToPublicID;
         this.communicatorThreads = communicatorThreads;
         this.freePublicId = freePublicId;
         this.sock = sock;
         this.ticker = ticker;
         sock.setSoTimeout(1000);
+
+        this.map = map;
     }
 
     @Override
@@ -52,6 +52,9 @@ public class ServerCommunicator implements Runnable{
                     oldCommunicator.interrupt();
                 }
             }
+            //sends map.
+            netOut.writeObject(map);
+
             communicatorThreads.put(id, Thread.currentThread());
             ServerReceiver receiver = new ServerReceiver(id, netIn, ticker.getLastInputs());
             ServerSender sender = new ServerSender(ticker.getMyStateQueue(id), netOut);
