@@ -22,6 +22,7 @@ public class Main extends StateBasedGame {
         StartScreen startScreen = new StartScreen();
         this.addState(startScreen);
         this.addState(new InGame(startScreen));
+        this.addState(new pauseScreen());
     }
 
     public static void main(String[] args) {
@@ -30,7 +31,7 @@ public class Main extends StateBasedGame {
             AppGameContainer appgc;
             appgc = new AppGameContainer(new Main("Project Escape"));
             appgc.setDisplayMode(screenW, screenH, false);
-            appgc.setTargetFrameRate(6000);
+            appgc.setTargetFrameRate(60);
             appgc.start();
         }
         catch (SlickException ex)

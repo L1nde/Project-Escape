@@ -10,7 +10,7 @@ import org.newdawn.slick.state.StateBasedGame;
 public class ServerMazeMap {
     private final int width;
     private final int height;
-    private String[][] map;
+    private final String[][] map;
 
     public ServerMazeMap(int width, int height) {
         this.width = width/20;
@@ -19,16 +19,24 @@ public class ServerMazeMap {
     }
 
     private String[][] generateMap() {
-        map = new String[width][height];
+        String[][] tempMap = new String[width][height];
+        int q = 0;
+        int h = 0;
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 //sides
                 if(i == 0 || j == 0 || i == width-1 || j == height-1){
-                    map[i][j] = "W";
+                    tempMap[i][j] = "W";
                 }
+                else if (q%2==0 && h%2==0){
+                    tempMap[i][j] = "W";
+                }
+                q++;
             }
+            q++;
+            h++;
         }
-        return map;
+        return tempMap;
     }
     public String[][] getMap() {
         return this.map;

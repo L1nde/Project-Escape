@@ -15,7 +15,6 @@ public class MazeMap {
     public MazeMap(ServerMazeMap map)  {
         String[][] map1 = map.getMap();
         this.map = new MapObjects[map1.length][map1[0].length];
-
         for (int x = 0; x < map1.length; x++) {
             for (int y = 0; y < map1[x].length; y++) {
 

@@ -9,5 +9,5 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 public interface MapObjects {
 
-    public void render(GameContainer container, StateBasedGame game, Graphics g);
+    void render(GameContainer container, StateBasedGame game, Graphics g);
 }

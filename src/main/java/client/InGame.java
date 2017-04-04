@@ -5,10 +5,8 @@ import general.GameState;
 import general.PlayerInputState;
 
 import general.PlayerState;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import server.ServerMazeMap;
@@ -32,6 +30,8 @@ public class InGame extends BasicGameState {
     private ServerMazeMap smap = new ServerMazeMap(800,600); //for testing. Server has to send it
     private MazeMap map;
     private StartScreen startScreen;
+    private boolean pause = false;
+    private Image floorTexture;
 
     public InGame(StartScreen startScreen) {
         this.startScreen = startScreen;
@@ -42,6 +42,7 @@ public class InGame extends BasicGameState {
         container.setAlwaysRender(true);
         map = new MazeMap(smap);
         System.out.println("init done");
+        this.floorTexture = new Image("resources/floor800x600.png");
 
     }
 
@@ -50,6 +51,10 @@ public class InGame extends BasicGameState {
         if (multiplayer && !communicatorCreated) {
             new Thread(new Communicator(sendData, receiveData, startScreen.getIP())).start();
             communicatorCreated = true;
+        }
+        if (pause){
+            pause = false;
+            game.enterState(3);
         }
         ArrayList<GameState> receivedGameStates = new ArrayList<>();
         receiveData.drainTo(receivedGameStates);
@@ -69,12 +74,19 @@ public class InGame extends BasicGameState {
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-        g.setColor(Color.green);
-        g.fillRect(0,0, container.getWidth(), container.getHeight());
+        g.setColor(Color.white);
+        g.texture(new Rectangle(0,0,800,600), floorTexture, 1, 1,true);
         map.render(container, game, g);
         for(Map.Entry<Integer, PlayerState> entry : gameState.getPlayerStates().entrySet()){
             Player player = new Player(entry.getValue());
             player.render(container, g);
+        }
+    }
+
+    @Override
+    public void keyPressed(int key, char c) {
+        if (c == 'p'){
+            pause = true;
         }
     }
 
