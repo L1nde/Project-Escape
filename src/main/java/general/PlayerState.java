@@ -7,9 +7,19 @@ import java.io.Serializable;
 public class PlayerState implements Serializable {
     private float x;
     private float y;
+    private double dx;
+    private double dy;
+
+    public double getdX() {
+        return dx;
+    }
+
+    public double getdY() {
+        return dy;
+    }
+
     private float speed;
     private PlayerInputState input;
-    private String direction = "right";
 
     public PlayerState(float x, float y, float speed) {
         this.x = x;
@@ -53,30 +63,14 @@ public class PlayerState implements Serializable {
         this.input = input;
     }
 
-    public String getDirection(){
-        return direction;
-    }
-
 
     public void calculateNewPos(float timeDelta, ServerMazeMap map){
         //input may be sabotaged
         if(input.isMoving() && Double.isFinite(input.getAccelerationDirection())){
-            double dx = speed * timeDelta * Math.cos(input.getAccelerationDirection());
-            double dy = speed * timeDelta * Math.sin(input.getAccelerationDirection());
-            if (Math.round(dx)==1){
-                direction = "right";
-            }
-            if (Math.round(dx) == -1){
-                direction = "left";
-            }
-            if (Math.round(dy) == -1){
-                direction = "up";
-            }
-            if (Math.round(dy) == 1){
-                direction = "down";
-            }
-            int[][] newPosTilesX = getPosTiles(0, dy);
-            int[][] newPosTilesY = getPosTiles(dx, 0);
+            dx = speed * timeDelta * Math.cos(input.getAccelerationDirection());
+            dy = speed * timeDelta * Math.sin(input.getAccelerationDirection());
+            int[][] newPosTilesY = getPosTiles(0, dy);
+            int[][] newPosTilesX = getPosTiles(dx, 0);
             String[][] smap = map.getMap();
 
             if (dy < 0 && smap[newPosTilesY[0][0]][newPosTilesY[0][1]] == null && smap[newPosTilesY[1][0]][newPosTilesY[1][1]] == null){
