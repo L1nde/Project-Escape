@@ -75,19 +75,20 @@ public class PlayerState implements Serializable {
             if (Math.round(dy) == 1){
                 direction = "down";
             }
-            int[][] newPosTiles = getPosTiles(dx, dy);
+            int[][] newPosTilesX = getPosTiles(0, dy);
+            int[][] newPosTilesY = getPosTiles(dx, 0);
             String[][] smap = map.getMap();
 
-            if (dy < 0 && smap[newPosTiles[0][0]][newPosTiles[0][1]] == null && smap[newPosTiles[1][0]][newPosTiles[1][1]] == null){
+            if (dy < 0 && smap[newPosTilesY[0][0]][newPosTilesY[0][1]] == null && smap[newPosTilesY[1][0]][newPosTilesY[1][1]] == null){
                 y += dy;
 
-            } else if (dy > 0 && smap[newPosTiles[2][0]][newPosTiles[2][1]] == null && smap[newPosTiles[3][0]][newPosTiles[3][1]] == null){
+            } else if (dy > 0 && smap[newPosTilesY[2][0]][newPosTilesY[2][1]] == null && smap[newPosTilesY[3][0]][newPosTilesY[3][1]] == null){
                 y += dy;
 
-            } if (dx < 0 && smap[newPosTiles[0][0]][newPosTiles[0][1]] == null && smap[newPosTiles[2][0]][newPosTiles[2][1]] == null){
+            } if (dx < 0 && smap[newPosTilesX[0][0]][newPosTilesX[0][1]] == null && smap[newPosTilesX[2][0]][newPosTilesX[2][1]] == null){
                 x += dx;
 
-            } else if (dx > 0 && smap[newPosTiles[1][0]][newPosTiles[1][1]] == null && smap[newPosTiles[3][0]][newPosTiles[3][1]] == null){
+            } else if (dx > 0 && smap[newPosTilesX[1][0]][newPosTilesX[1][1]] == null && smap[newPosTilesX[3][0]][newPosTilesX[3][1]] == null){
                 x += dx;
 
             }
