@@ -9,6 +9,7 @@ public class PlayerState implements Serializable {
     private float y;
     private float speed;
     private PlayerInputState input;
+    private String direction = "right";
 
     public PlayerState(float x, float y, float speed) {
         this.x = x;
@@ -52,12 +53,28 @@ public class PlayerState implements Serializable {
         this.input = input;
     }
 
+    public String getDirection(){
+        return direction;
+    }
+
 
     public void calculateNewPos(float timeDelta, ServerMazeMap map){
         //input may be sabotaged
         if(input.isMoving() && Double.isFinite(input.getAccelerationDirection())){
             double dx = speed * timeDelta * Math.cos(input.getAccelerationDirection());
             double dy = speed * timeDelta * Math.sin(input.getAccelerationDirection());
+            if (Math.round(dx)==1){
+                direction = "right";
+            }
+            if (Math.round(dx) == -1){
+                direction = "left";
+            }
+            if (Math.round(dy) == -1){
+                direction = "up";
+            }
+            if (Math.round(dy) == 1){
+                direction = "down";
+            }
             int[][] newPosTiles = getPosTiles(dx, dy);
             String[][] smap = map.getMap();
 

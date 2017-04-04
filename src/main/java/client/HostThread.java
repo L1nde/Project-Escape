@@ -6,7 +6,7 @@ import server.Server;
 
 import java.io.IOException;
 
-public class hostThread implements Runnable{
+public class HostThread implements Runnable{
     @Override
     public void run() {
         try {

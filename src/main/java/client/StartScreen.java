@@ -8,9 +8,6 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
-import server.Server;
-
-import java.io.IOException;
 
 public class StartScreen extends BasicGameState{
     private TextField ipBox;
@@ -61,7 +58,7 @@ public class StartScreen extends BasicGameState{
         }
         if (host){
             host = false;
-            new Thread(new hostThread()).start();
+            new Thread(new HostThread()).start();
             game.enterState(0);
         }
     }
