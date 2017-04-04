@@ -11,6 +11,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import server.ServerMazeMap;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,9 +30,14 @@ public class InGame extends BasicGameState {
     private boolean communicatorCreated = false;
     private BlockingQueue<GameState> receiveData = new LinkedBlockingQueue<>();
     private BlockingQueue<PlayerInputState> sendData = new LinkedBlockingQueue<>();
+    private ServerMazeMap smap = new ServerMazeMap(800,600); //for testing. Server has to send it
+    private MazeMap map;
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException{
         container.setAlwaysRender(true);
+        map = new MazeMap(smap);
+        System.out.println("init done");
+
     }
 
     @Override
@@ -79,7 +85,7 @@ public class InGame extends BasicGameState {
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         g.setColor(Color.green);
         g.fillRect(0,0, container.getWidth(), container.getHeight());
-
+        map.render(container, game, g);
         for(Map.Entry<Integer, PlayerState> entry : gameState.getPlayerStates().entrySet()){
             Player player = new Player(entry.getValue());
             player.render(container, g);

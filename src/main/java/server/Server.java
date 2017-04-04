@@ -15,17 +15,17 @@ public class Server {
         int freePublicID = 0;
         Map<UUID, Integer> privateToPublicID = Collections.synchronizedMap(new HashMap<UUID, Integer>());
         Map<Integer, Thread> communicatorThreads = Collections.synchronizedMap(new HashMap<Integer, Thread>());
-        ServerTicker ticker = new ServerTicker();
+        ServerMazeMap map = new ServerMazeMap(800,600); //selle peaks paremini tegema, praegu hardcoded, kuna tahan kiiresti testida
+        ServerTicker ticker = new ServerTicker(map);
         Thread tickerThread = new Thread(ticker);
         tickerThread.start();
         threadList.add(tickerThread);
-        MazeMap map = new MazeMap(800,600); //selle peaks paremini tegema, praegu hardcoded, kuna tahan kiiresti testida
         try (ServerSocket ss = new ServerSocket(1337)) {
             while (true) {
                 try {
                     Socket sock = ss.accept();
                     ServerCommunicator communicator = new ServerCommunicator(
-                            privateToPublicID, communicatorThreads, freePublicID, sock, ticker, map);
+                            privateToPublicID, communicatorThreads, freePublicID, sock, ticker);
                     ++freePublicID;
                     Thread communicatorThread = new Thread(communicator);
                     communicatorThread.start();

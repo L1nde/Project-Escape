@@ -25,14 +25,16 @@ public class ServerTicker implements Runnable {
     final private float playerDefaultY = 100;
     final private long  tickDelay = (long)1e9f/60/4; // in nanoseconds
     final private float timePerTick = 1.0f/4;
+    private ServerMazeMap map;
     // Tickrate is 240 ticks/second at the moment.
 
-    public ServerTicker() {
+    public ServerTicker(ServerMazeMap map) {
         //lastInputs is accessed often by ServerReceiver threads so it is Concurrent
         this.lastInputs = new ConcurrentHashMap<>();
         //Synchronization needed in getMyStateQueue
         this.gameStateDistributor = Collections.synchronizedMap(new HashMap<>());
         gameState = new GameState(0, timePerTick);
+        this.map = map;
     }
 
     public void addPlayer(int newId){
@@ -58,7 +60,7 @@ public class ServerTicker implements Runnable {
         while(true){
             synchronized (this){
                 gameState.setInputs(lastInputs);
-                gameState.nextState(tick +1);
+                gameState.nextState(tick +1, map);
                 ++tick;
                 for(Map.Entry<Integer, BlockingQueue<GameState> > entry : gameStateDistributor.entrySet()){
                     entry.getValue().add(new GameState(gameState));

@@ -1,14 +1,18 @@
 package server;
 
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.state.StateBasedGame;
+
 /**
  * Created by Meelis Perli on 4/2/2017.
  */
-public class MazeMap {
+public class ServerMazeMap {
     private final int width;
     private final int height;
     private String[][] map;
 
-    public MazeMap(int width, int height) {
+    public ServerMazeMap(int width, int height) {
         this.width = width/20;
         this.height = height/20;
         this.map = generateMap();
@@ -25,6 +29,8 @@ public class MazeMap {
             }
         }
         return map;
-
+    }
+    public String[][] getMap() {
+        return this.map;
     }
 }

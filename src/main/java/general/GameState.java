@@ -1,6 +1,7 @@
 package general;
 
 import com.sun.media.jfxmedia.events.PlayerStateEvent;
+import server.ServerMazeMap;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -42,10 +43,10 @@ public class GameState implements Serializable, Comparable<GameState>{
         playerStates.put(id, state);
     }
 
-    public void nextState(int targetTick){
+    public void nextState(int targetTick, ServerMazeMap map){
         if(targetTick > tick){
             for(Map.Entry<Integer, PlayerState> entry : playerStates.entrySet()){
-                entry.getValue().calculateNewPos((targetTick - tick)*timePerTick);
+                entry.getValue().calculateNewPos((targetTick - tick)*timePerTick, map);
             }
             tick = targetTick;
         }

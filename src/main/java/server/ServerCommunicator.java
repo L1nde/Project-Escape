@@ -13,13 +13,12 @@ public class ServerCommunicator implements Runnable{
     final private int freePublicId;
     final private Socket sock;
     final private ServerTicker ticker;
-    private MazeMap map;
 
     public ServerCommunicator(Map<UUID, Integer> privateToPublicID, //Needs to be synchronized
                               Map<Integer, Thread> communicatorThreads, //Needs to be synchronized
                               int freePublicId,
                               Socket sock,
-                              ServerTicker ticker, MazeMap map) throws SocketException {
+                              ServerTicker ticker) throws SocketException {
         this.privateToPublicID = privateToPublicID;
         this.communicatorThreads = communicatorThreads;
         this.freePublicId = freePublicId;
@@ -27,7 +26,6 @@ public class ServerCommunicator implements Runnable{
         this.ticker = ticker;
         sock.setSoTimeout(1000);
 
-        this.map = map;
     }
 
     @Override
@@ -52,8 +50,6 @@ public class ServerCommunicator implements Runnable{
                     oldCommunicator.interrupt();
                 }
             }
-            //sends map.
-            netOut.writeObject(map);
 
             communicatorThreads.put(id, Thread.currentThread());
             ServerReceiver receiver = new ServerReceiver(id, netIn, ticker.getLastInputs());
