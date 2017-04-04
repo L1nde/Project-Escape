@@ -25,13 +25,18 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class InGame extends BasicGameState {
     private GameState gameState = new GameState(-1, 0);
-    private int playerCount = 1;
     private boolean multiplayer = true;
     private boolean communicatorCreated = false;
     private BlockingQueue<GameState> receiveData = new LinkedBlockingQueue<>();
     private BlockingQueue<PlayerInputState> sendData = new LinkedBlockingQueue<>();
     private ServerMazeMap smap = new ServerMazeMap(800,600); //for testing. Server has to send it
     private MazeMap map;
+    private StartScreen startScreen;
+
+    public InGame(StartScreen startScreen) {
+        this.startScreen = startScreen;
+    }
+
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException{
         container.setAlwaysRender(true);
@@ -43,7 +48,7 @@ public class InGame extends BasicGameState {
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         if (multiplayer && !communicatorCreated) {
-            new Thread(new Communicator(sendData, receiveData)).start();
+            new Thread(new Communicator(sendData, receiveData, startScreen.getIP())).start();
             communicatorCreated = true;
         }
         ArrayList<GameState> receivedGameStates = new ArrayList<>();
@@ -54,25 +59,6 @@ public class InGame extends BasicGameState {
                 gameState = mostRecentReceived;
             }
         }
-        /*
-        String input = receiveData.poll();
-        if (input != null){
-            String[] dataInput = input.split(" ");
-            for (String s : dataInput) {
-                String[] dataInput2 = s.split("/");
-                int id = Integer.parseInt(dataInput2[0]);
-                if (id == playerCount){
-                    players.add(new Player(100, 100));
-                    playerCount++;
-                    System.out.println("added");
-                }
-                if (id <= playerCount) {
-                    players.get(id).setX(Float.parseFloat(dataInput2[1]));
-                    players.get(id).setY(Float.parseFloat(dataInput2[2]));
-                }
-            }
-        }
-        */
         PlayerInputState freshInput = PlayerInputReceiver.receive(container);
         sendData.add(freshInput);
     }
