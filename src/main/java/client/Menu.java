@@ -24,18 +24,19 @@ public class Menu extends BasicGameState {
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
-
+        playButton = new Rectangle(container.getWidth()/8, container.getHeight()/10, 100, 40);
+        exitButton = new Rectangle(container.getWidth()/8, container.getHeight()/10+50, 100, 40);
     }
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         g.setColor(Color.blue);
 
-        playButton = new Rectangle(container.getWidth()/8, container.getHeight()/10, 100, 40);
+
         g.draw(playButton);
         g.drawString("Play", playButton.getX()+10, playButton.getY()+10);
 
-        exitButton = new Rectangle(container.getWidth()/8, container.getHeight()/10+50, 100, 40);
+
         g.draw(exitButton);
         g.drawString("Exit", exitButton.getX()+10, exitButton.getY()+10);
     }
@@ -43,7 +44,7 @@ public class Menu extends BasicGameState {
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         if (playMP){
-            game.enterState(0);
+            game.enterState(2);
         }
         else if (exit){
             container.exit();

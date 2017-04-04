@@ -24,11 +24,16 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class InGame extends BasicGameState {
     private GameState gameState = new GameState(-1, 0);
-    private int playerCount = 1;
     private boolean multiplayer = true;
     private boolean communicatorCreated = false;
     private BlockingQueue<GameState> receiveData = new LinkedBlockingQueue<>();
     private BlockingQueue<PlayerInputState> sendData = new LinkedBlockingQueue<>();
+    private StartScreen startScreen;
+
+    public InGame(StartScreen startScreen) {
+        this.startScreen = startScreen;
+    }
+
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException{
         container.setAlwaysRender(true);
@@ -37,7 +42,7 @@ public class InGame extends BasicGameState {
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         if (multiplayer && !communicatorCreated) {
-            new Thread(new Communicator(sendData, receiveData)).start();
+            new Thread(new Communicator(sendData, receiveData, startScreen.getIP())).start();
             communicatorCreated = true;
         }
         ArrayList<GameState> receivedGameStates = new ArrayList<>();

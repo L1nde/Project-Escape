@@ -19,10 +19,12 @@ public class Communicator implements Runnable {
     private int maxTries = 1000;
     private BlockingQueue<GameState> receiveData;
     private BlockingQueue<PlayerInputState> sendData;
+    private String ip;
 
-    public Communicator(BlockingQueue<PlayerInputState> sendData, BlockingQueue<GameState> receiveData) {
+    public Communicator(BlockingQueue<PlayerInputState> sendData, BlockingQueue<GameState> receiveData, String ip) {
         this.sendData = sendData;
         this.receiveData = receiveData;
+        this.ip = ip;
     }
 
     @Override
@@ -31,7 +33,7 @@ public class Communicator implements Runnable {
         for(int i = 0; i < maxTries; ++i){
             Socket sock = new Socket();
             try {
-                sock.connect(new InetSocketAddress("localhost", 1337), 1000);
+                sock.connect(new InetSocketAddress(ip, 1337), 1000);
                 sock.setSoTimeout(1000);
                 //ObjectInputStream tries to gets an object internally when created.
                 try(ObjectOutputStream netOut = new ObjectOutputStream(sock.getOutputStream())){
