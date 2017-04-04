@@ -29,7 +29,7 @@ public class StartScreen extends BasicGameState{
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
         ipBox = new TextField(container, container.getDefaultFont(),100,50, 200,20);
         connectButton = new Rectangle(305, 50, 100, 20);
-        hostButton = new Rectangle(200, 90, 100, 20);
+        hostButton = new Rectangle(305, 90, 100, 20);
     }
 
     @Override
