@@ -13,18 +13,21 @@ public class ServerCommunicator implements Runnable{
     final private int freePublicId;
     final private Socket sock;
     final private ServerTicker ticker;
+    private final ServerMazeMap map;
 
     public ServerCommunicator(Map<UUID, Integer> privateToPublicID, //Needs to be synchronized
                               Map<Integer, Thread> communicatorThreads, //Needs to be synchronized
                               int freePublicId,
                               Socket sock,
-                              ServerTicker ticker) throws SocketException {
+                              ServerTicker ticker,
+                              ServerMazeMap map) throws SocketException {
         this.privateToPublicID = privateToPublicID;
         this.communicatorThreads = communicatorThreads;
         this.freePublicId = freePublicId;
         this.sock = sock;
         this.ticker = ticker;
         sock.setSoTimeout(1000);
+        this.map = map;
 
     }
 
@@ -53,7 +56,7 @@ public class ServerCommunicator implements Runnable{
 
             communicatorThreads.put(id, Thread.currentThread());
             ServerReceiver receiver = new ServerReceiver(id, netIn, ticker.getLastInputs());
-            ServerSender sender = new ServerSender(ticker.getMyStateQueue(id), netOut);
+            ServerSender sender = new ServerSender(ticker.getMyStateQueue(id), netOut, map);
             FutureTask senderTask = new FutureTask(sender);
             Thread senderThread = new Thread(senderTask);
             senderThread.start();

@@ -5,6 +5,7 @@ package client;
 
 import general.GameState;
 import general.PlayerInputState;
+import server.ServerMazeMap;
 
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -20,11 +21,13 @@ public class Communicator implements Runnable {
     private BlockingQueue<GameState> receiveData;
     private BlockingQueue<PlayerInputState> sendData;
     private String ip;
+    private BlockingQueue<ServerMazeMap> map;
 
-    public Communicator(BlockingQueue<PlayerInputState> sendData, BlockingQueue<GameState> receiveData, String ip) {
+    public Communicator(BlockingQueue<PlayerInputState> sendData, BlockingQueue<GameState> receiveData, String ip, BlockingQueue<ServerMazeMap> map) {
         this.sendData = sendData;
         this.receiveData = receiveData;
         this.ip = ip;
+        this.map = map;
     }
 
     @Override
@@ -41,6 +44,7 @@ public class Communicator implements Runnable {
                     netOut.flush();
                     try(ObjectInputStream netIn = new ObjectInputStream(sock.getInputStream())){
                         int id = netIn.readInt();
+                        map.put((ServerMazeMap) netIn.readObject());
                         Sender sender = new Sender(sendData, netOut);
                         Receiver receiver = new Receiver(netIn, receiveData);
                         FutureTask senderTask = new FutureTask(sender);

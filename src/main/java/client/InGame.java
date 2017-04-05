@@ -14,6 +14,7 @@ import server.ServerMazeMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -27,7 +28,7 @@ public class InGame extends BasicGameState {
     private boolean communicatorCreated = false;
     private BlockingQueue<GameState> receiveData = new LinkedBlockingQueue<>();
     private BlockingQueue<PlayerInputState> sendData = new LinkedBlockingQueue<>();
-    private ServerMazeMap smap = new ServerMazeMap(800,600); //for testing. Server has to send it
+    private BlockingQueue<ServerMazeMap> smap = new ArrayBlockingQueue<>(1);
     private MazeMap map;
     private StartScreen startScreen;
     private boolean pause = false;
@@ -40,7 +41,6 @@ public class InGame extends BasicGameState {
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException{
         container.setAlwaysRender(true);
-        map = new MazeMap(smap);
         System.out.println("init done");
         this.floorTexture = new Image("resources/floor800x600.png");
 
@@ -49,8 +49,13 @@ public class InGame extends BasicGameState {
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         if (multiplayer && !communicatorCreated) {
-            new Thread(new Communicator(sendData, receiveData, startScreen.getIP())).start();
+            new Thread(new Communicator(sendData, receiveData, startScreen.getIP(), smap)).start();
             communicatorCreated = true;
+            try {
+                map = new MazeMap(smap.take());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         if (pause){
             pause = false;

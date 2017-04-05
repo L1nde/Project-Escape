@@ -25,7 +25,7 @@ public class Server {
                 try {
                     Socket sock = ss.accept();
                     ServerCommunicator communicator = new ServerCommunicator(
-                            privateToPublicID, communicatorThreads, freePublicID, sock, ticker);
+                            privateToPublicID, communicatorThreads, freePublicID, sock, ticker, map);
                     ++freePublicID;
                     Thread communicatorThread = new Thread(communicator);
                     communicatorThread.start();
