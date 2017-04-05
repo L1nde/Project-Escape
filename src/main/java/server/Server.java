@@ -15,7 +15,7 @@ public class Server {
         int freePublicID = 0;
         Map<UUID, Integer> privateToPublicID = Collections.synchronizedMap(new HashMap<UUID, Integer>());
         Map<Integer, Thread> communicatorThreads = Collections.synchronizedMap(new HashMap<Integer, Thread>());
-        ServerMazeMap map = new ServerMazeMap(800,600); //selle peaks paremini tegema, praegu hardcoded, kuna tahan kiiresti testida
+        ServerMazeMap map = new ServerMazeMap(800,600);
         ServerTicker ticker = new ServerTicker(map);
         Thread tickerThread = new Thread(ticker);
         tickerThread.start();

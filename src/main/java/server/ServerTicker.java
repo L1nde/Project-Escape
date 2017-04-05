@@ -62,7 +62,7 @@ public class ServerTicker implements Runnable {
                 gameState.nextState(tick +1, map);
                 ++tick;
                 for(Map.Entry<Integer, BlockingQueue<GameState> > entry : gameStateDistributor.entrySet()){
-                    entry.getValue().add(new GameState(gameState));
+                    entry.getValue().add(new GameState(gameState, map));
                 }
             }
             nextTickStart += tickDelay/1e6;

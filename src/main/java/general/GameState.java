@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentMap;
 
 public class GameState implements Serializable, Comparable<GameState>{
     final private Map<Integer, PlayerState> playerStates;
+    private MapUpdate mapUpdate;
     private int tick;
     final private float timePerTick;
 
@@ -19,9 +20,10 @@ public class GameState implements Serializable, Comparable<GameState>{
         this.timePerTick = timePerTick;
     }
 
-    public GameState(GameState other){
+    public GameState(GameState other, ServerMazeMap map){
         this(other.tick, other.timePerTick);
         playerStates.putAll(other.playerStates);
+        mapUpdate = map.getMapUpdate();
     }
 
     public int getTick() {
@@ -32,11 +34,17 @@ public class GameState implements Serializable, Comparable<GameState>{
         return playerStates;
     }
 
+    public MapUpdate getMapUpdate() {
+        return mapUpdate;
+    }
+
     public void setInputs(ConcurrentMap<Integer, PlayerInputState> lastInputs) {
         for(Map.Entry<Integer, PlayerState> entry : playerStates.entrySet()){
             PlayerInputState newInput = lastInputs.getOrDefault(entry.getKey(), new PlayerInputState());
             entry.getValue().setInput(newInput);
         }
+
+
     }
 
     public void addPlayer(int id, PlayerState state){

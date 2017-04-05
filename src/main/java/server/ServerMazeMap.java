@@ -1,5 +1,6 @@
 package server;
 
+import general.MapUpdate;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.state.StateBasedGame;
@@ -13,11 +14,20 @@ public class ServerMazeMap implements Serializable {
     private final int width;
     private final int height;
     private final String[][] map;
+    private MapUpdate mapUpdate;
 
     public ServerMazeMap(int width, int height) {
         this.width = width/20;
         this.height = height/20;
         this.map = generateMap();
+    }
+
+    public void setMapUpdate(MapUpdate mapUpdate) {
+        this.mapUpdate = mapUpdate;
+    }
+
+    public MapUpdate getMapUpdate() {
+        return mapUpdate;
     }
 
     private String[][] generateMap() {
@@ -30,14 +40,12 @@ public class ServerMazeMap implements Serializable {
                 }
                 if (Math.random()>0.85){
                     tempMap[i][j] = "W";
+                } else if (tempMap[i][j] == null){
+                    tempMap[i][j] = "F";
                 }
-//                else if (q%2==0 && h%2==0){
-//                    tempMap[i][j] = "W";
-//                }
-//                q++;
+//
             }
-//            q++;
-//            h++;
+//
         }
         return tempMap;
     }

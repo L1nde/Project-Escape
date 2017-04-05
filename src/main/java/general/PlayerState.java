@@ -3,12 +3,14 @@ package general;
 import server.ServerMazeMap;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 public class PlayerState implements Serializable {
     private float x;
     private float y;
     private double dx;
     private double dy;
+
 
     public double getdX() {
         return dx;
@@ -72,19 +74,35 @@ public class PlayerState implements Serializable {
             int[][] newPosTilesY = getPosTiles(0, dy);
             int[][] newPosTilesX = getPosTiles(dx, 0);
             String[][] smap = map.getMap();
-
-            if (dy < 0 && smap[newPosTilesY[0][0]][newPosTilesY[0][1]] == null && smap[newPosTilesY[1][0]][newPosTilesY[1][1]] == null){
+            //collision
+            //up
+            if (dy < 0 && !(smap[newPosTilesY[0][0]][newPosTilesY[0][1]].equals("W") || smap[newPosTilesY[1][0]][newPosTilesY[1][1]].equals("W"))){
                 y += dy;
-
-            } else if (dy > 0 && smap[newPosTilesY[2][0]][newPosTilesY[2][1]] == null && smap[newPosTilesY[3][0]][newPosTilesY[3][1]] == null){
+                if(smap[(int) Math.floor((x+10)/20.0)][(int) Math.floor((y+5)/20.0)].equals("F")) {
+                    smap[(int) Math.floor((x+10)/20.0)][(int) Math.floor((y+5)/20.0)] = "P";
+                    map.setMapUpdate(new MapUpdate((int) Math.floor((x+10)/20.0),(int) Math.floor((y+5)/20.0), "P"));
+                }
+            //down
+            } else if (dy > 0 && !(smap[newPosTilesY[2][0]][newPosTilesY[2][1]].equals("W") || smap[newPosTilesY[3][0]][newPosTilesY[3][1]].equals("W"))){
                 y += dy;
-
-            } if (dx < 0 && smap[newPosTilesX[0][0]][newPosTilesX[0][1]] == null && smap[newPosTilesX[2][0]][newPosTilesX[2][1]] == null){
+                if(smap[(int) Math.floor((x+10)/20.0)][(int) Math.floor((y+15)/20.0)].equals("F")) {
+                    smap[(int) Math.floor((x+10)/20.0)][(int) Math.floor((y+15)/20.0)] = "P";
+                    map.setMapUpdate(new MapUpdate((int) Math.floor((x+10)/20.0),(int) Math.floor((y+15)/20.0), "P"));
+                }
+            //right
+            } if (dx < 0 && !(smap[newPosTilesX[0][0]][newPosTilesX[0][1]].equals("W") || smap[newPosTilesX[2][0]][newPosTilesX[2][1]].equals("W"))){
                 x += dx;
-
-            } else if (dx > 0 && smap[newPosTilesX[1][0]][newPosTilesX[1][1]] == null && smap[newPosTilesX[3][0]][newPosTilesX[3][1]] == null){
+                if(smap[(int) Math.floor((x+5)/10.0)][(int) Math.floor((y+10)/20.0)].equals("F")) {
+                    smap[(int) Math.floor((x+5)/10.0)][(int) Math.floor((y+10)/20.0)] = "P";
+                    map.setMapUpdate(new MapUpdate((int) Math.floor((x+5)/20.0),(int) Math.floor((y+10)/20.0), "P"));
+                }
+            //left
+            } else if (dx > 0 && !(smap[newPosTilesX[1][0]][newPosTilesX[1][1]].equals("W") || smap[newPosTilesX[3][0]][newPosTilesX[3][1]].equals("W"))){
                 x += dx;
-
+                if(smap[(int) Math.floor((x+15)/20.0)][(int) Math.floor((y+10)/20.0)].equals("F")) {
+                    smap[(int) Math.floor((x+15)/20.0)][(int) Math.floor((y+10)/20.0)] = "P";
+                    map.setMapUpdate(new MapUpdate((int) Math.floor((x+15)/20.0),(int) Math.floor((y+10)/20.0), "P"));
+                }
             }
             // TODO accelerated movement
         }

@@ -69,12 +69,10 @@ public class InGame extends BasicGameState {
                 gameState = mostRecentReceived;
             }
         }
+        map.update(gameState.getMapUpdate());
         PlayerInputState freshInput = PlayerInputReceiver.receive(container);
         sendData.add(freshInput);
     }
-
-
-
 
 
     @Override
