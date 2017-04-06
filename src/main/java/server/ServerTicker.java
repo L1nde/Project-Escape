@@ -1,6 +1,7 @@
 package server;
 
 import general.GameState;
+import general.Ghosts.GhostLinde;
 import general.PlayerInputState;
 import general.PlayerState;
 
@@ -41,6 +42,7 @@ public class ServerTicker implements Runnable {
             lastInputs.putIfAbsent(newId, new PlayerInputState());
             gameStateDistributor.put(newId, new LinkedBlockingQueue<>());
             gameState.addPlayer(newId, new PlayerState(playerDefaultX, playerDefaultY, playerDefaultSpeed));
+            gameState.addGhost(newId, new GhostLinde(playerDefaultX, playerDefaultY, playerDefaultSpeed));
         }
     }
 

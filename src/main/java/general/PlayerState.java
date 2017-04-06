@@ -12,17 +12,9 @@ public class PlayerState implements Serializable {
     private double dy;
 
 
-    public double getdX() {
-        return dx;
-    }
-
-    public double getdY() {
-        return dy;
-    }
-
     private float speed;
-    private PlayerInputState input;
 
+    private PlayerInputState input;
     public PlayerState(float x, float y, float speed) {
         this.x = x;
         this.y = y;
@@ -36,6 +28,14 @@ public class PlayerState implements Serializable {
 
     public float getY() {
         return y;
+    }
+
+    public double getdX() {
+        return dx;
+    }
+
+    public double getdY() {
+        return dy;
     }
 
     public int[][] getPosTiles(double dx, double dy) {
