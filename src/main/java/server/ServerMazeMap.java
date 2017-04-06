@@ -38,7 +38,7 @@ public class ServerMazeMap implements Serializable {
                 if(i == 0 || j == 0 || i == width-1 || j == height-1){
                     tempMap[i][j] = "W";
                 }
-                if (Math.random()>0.85){
+                if (Math.random()>0.85) {
                     tempMap[i][j] = "W";
                 } else if (tempMap[i][j] == null){
                     tempMap[i][j] = "F";

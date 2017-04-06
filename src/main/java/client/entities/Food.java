@@ -11,16 +11,18 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 public class Food implements MapObjects{
 
-    private final int[] cords;
+    private final int[] cords = new int[2];
     private final int radius = 5;
 
     public Food(int[] cords) {
-        this.cords = cords;
+        this.cords[0] = cords[0] + 10 - radius/2;
+        this.cords[1] = cords[1] + 10 - radius/2;
     }
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) {
+
         g.setColor(Color.blue);
-        g.fillOval(cords[0] + 10 - radius/2, cords[1] + 10 - radius/2, radius, radius);
+        g.fillRect(cords[0], cords[1], radius, radius);
     }
 }
