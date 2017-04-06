@@ -42,7 +42,7 @@ public class ServerTicker implements Runnable {
             lastInputs.putIfAbsent(newId, new PlayerInputState());
             gameStateDistributor.put(newId, new LinkedBlockingQueue<>());
             gameState.addPlayer(newId, new PlayerState(playerDefaultX, playerDefaultY, playerDefaultSpeed));
-            gameState.addGhost(newId, new GhostLinde(playerDefaultX, playerDefaultY, playerDefaultSpeed));
+            gameState.addGhost(newId, new GhostLinde(500, 500, playerDefaultSpeed));
         }
     }
 

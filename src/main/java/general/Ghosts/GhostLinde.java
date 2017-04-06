@@ -3,9 +3,11 @@ package general.Ghosts;/*
  */
 
 
+import general.PlayerState;
 import server.ServerMazeMap;
 
 import java.io.Serializable;
+import java.util.Map;
 
 public class GhostLinde implements GhostObjects, Serializable {
     private float x;
@@ -32,7 +34,25 @@ public class GhostLinde implements GhostObjects, Serializable {
     }
 
     @Override
-    public void calculateNewPos(double timeDelta, ServerMazeMap map) {
-
+    public void calculateNewPos(double timeDelta, ServerMazeMap map, Map<Integer, PlayerState> playerStates) {
+        float playerCoordX = playerStates.get(0).getX();
+        float playerCoordY = playerStates.get(0).getY();
+        String[][] smap = map.getMap();
+        if (playerCoordX != 0){
+            if (playerCoordX-x < 0) {
+                x += -timeDelta * speed;
+            }
+            if (playerCoordX-x > 0){
+                x += timeDelta*speed;
+            }
+        }
+        if (playerCoordY != 0) {
+            if (playerCoordY - y < 0) {
+                y += -timeDelta * speed;
+            }
+            if (playerCoordY - y > 0) {
+                y += timeDelta * speed;
+            }
+        }
     }
 }

@@ -66,7 +66,7 @@ public class GameState implements Serializable, Comparable<GameState>{
                 entry.getValue().calculateNewPos((targetTick - tick)*timePerTick, map);
             }
             for (Map.Entry<Integer, GhostObjects> entry : ghosts.entrySet()) {
-                entry.getValue().calculateNewPos((targetTick - tick)*timePerTick, map);
+                entry.getValue().calculateNewPos((targetTick - tick)*timePerTick, map, playerStates);
             }
             tick = targetTick;
         }
