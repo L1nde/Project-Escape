@@ -92,8 +92,8 @@ public class PlayerState implements Serializable {
             //right
             } if (dx < 0 && !(smap[newPosTilesX[0][0]][newPosTilesX[0][1]].equals("W") || smap[newPosTilesX[2][0]][newPosTilesX[2][1]].equals("W"))){
                 x += dx;
-                if(smap[(int) Math.floor((x+5)/10.0)][(int) Math.floor((y+10)/20.0)].equals("F")) {
-                    smap[(int) Math.floor((x+5)/10.0)][(int) Math.floor((y+10)/20.0)] = "P";
+                if(smap[(int) Math.floor((x+5)/20.0)][(int) Math.floor((y+10)/20.0)].equals("F")) {
+                    smap[(int) Math.floor((x+5)/20.0)][(int) Math.floor((y+10)/20.0)] = "P";
                     map.setMapUpdate(new MapUpdate((int) Math.floor((x+5)/20.0),(int) Math.floor((y+10)/20.0), "P"));
                 }
             //left
