@@ -1,7 +1,7 @@
 package server;
 
 import general.GameState;
-import general.Ghosts.GhostLinde;
+import server.Ghosts.GhostLinde;
 import general.PlayerInputState;
 import general.PlayerState;
 
@@ -19,12 +19,13 @@ public class ServerTicker implements Runnable {
     final private ConcurrentMap<Integer, PlayerInputState> lastInputs;
     final private Map<Integer, BlockingQueue<GameState> > gameStateDistributor;
 
-    private GameState gameState;
+    private ServerGameState gameState;
     final private float playerDefaultSpeed = 1;
     final private float playerDefaultX = 100;
     final private float playerDefaultY = 100;
     final private long  tickDelay = (long)1e9f/60; // in nanoseconds
     final private float timePerTick = 1.0f;
+    final public static float EPS = 1e-5f;
     private ServerMazeMap map;
     // Tickrate is 60 ticks/second at the moment.
 
@@ -33,7 +34,7 @@ public class ServerTicker implements Runnable {
         this.lastInputs = new ConcurrentHashMap<>();
         //Synchronization needed in getMyStateQueue
         this.gameStateDistributor = Collections.synchronizedMap(new HashMap<>());
-        gameState = new GameState(0, timePerTick);
+        gameState = new ServerGameState(0, timePerTick);
         this.map = map;
     }
 
@@ -64,7 +65,7 @@ public class ServerTicker implements Runnable {
                 gameState.nextState(tick +1, map);
                 ++tick;
                 for(Map.Entry<Integer, BlockingQueue<GameState> > entry : gameStateDistributor.entrySet()){
-                    entry.getValue().add(new GameState(gameState, map));
+                    entry.getValue().add(gameState.toTransmitable());
                 }
             }
             nextTickStart += tickDelay/1e6;

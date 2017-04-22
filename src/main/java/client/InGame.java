@@ -3,7 +3,8 @@ package client;
 import client.entities.Ghost;
 import client.entities.Player;
 import general.GameState;
-import general.Ghosts.GhostObjects;
+import general.GhostState;
+import server.Ghosts.GhostObjects;
 import general.PlayerInputState;
 
 import general.PlayerState;
@@ -25,7 +26,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Created by Meelis Perli on 3/18/2017.
  */
 public class InGame extends BasicGameState {
-    private GameState gameState = new GameState(-1, 0);
+    private GameState gameState;
     private boolean multiplayer = true;
     private boolean communicatorCreated = false;
     private BlockingQueue<GameState> receiveData = new LinkedBlockingQueue<>();
@@ -67,11 +68,12 @@ public class InGame extends BasicGameState {
         receiveData.drainTo(receivedGameStates);
         if(!receivedGameStates.isEmpty()){
             GameState mostRecentReceived = Collections.max(receivedGameStates);
-            if(mostRecentReceived.compareTo(gameState) == 1){
+            if(gameState == null || mostRecentReceived.compareTo(gameState) == 1){
                 gameState = mostRecentReceived;
             }
+        }if(gameState != null){
+            map.update(gameState.getMapUpdate());
         }
-        map.update(gameState.getMapUpdate());
         PlayerInputState freshInput = PlayerInputReceiver.receive(container);
         sendData.add(freshInput);
     }
@@ -82,13 +84,15 @@ public class InGame extends BasicGameState {
         g.setColor(Color.white);
         g.texture(new Rectangle(0,0,800,600), floorTexture, 1, 1,true);
         map.render(container, game, g);
-        for(Map.Entry<Integer, PlayerState> entry : gameState.getPlayerStates().entrySet()){
-            Player player = new Player(entry.getValue());
-            player.render(container, g);
-        }
-        for (Map.Entry<Integer, GhostObjects> entry : gameState.getGhosts().entrySet()) {
-            Ghost ghost = new Ghost(entry.getValue());
-            ghost.render(container, g);
+        if(gameState != null){
+            for(Map.Entry<Integer, PlayerState> entry : gameState.getPlayerStates().entrySet()){
+                Player player = new Player(entry.getValue());
+                player.render(container, g);
+            }
+            for (Map.Entry<Integer, GhostState> entry : gameState.getGhostsStates().entrySet()) {
+                Ghost ghost = new Ghost(entry.getValue());
+                ghost.render(container, g);
+            }
         }
     }
 

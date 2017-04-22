@@ -1,8 +1,10 @@
-package general.Ghosts;/*
+package server.Ghosts;/*
  * Created by L1ND3 on 06.04.2017. 
  */
 
 
+import general.GhostState;
+import general.Point;
 import server.ServerMazeMap;
 
 import java.io.Serializable;
@@ -34,5 +36,9 @@ public class GhostLinde implements GhostObjects, Serializable {
     @Override
     public void calculateNewPos(double timeDelta, ServerMazeMap map) {
 
+    }
+    @Override
+    public GhostState getAsState() {
+        return new GhostState(new Point(x, y));
     }
 }
