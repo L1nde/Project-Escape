@@ -5,7 +5,12 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.state.StateBasedGame;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * Created by Meelis Perli on 4/2/2017.
@@ -13,13 +18,13 @@ import java.io.Serializable;
 public class ServerMazeMap implements Serializable {
     private final int width;
     private final int height;
-    private final String[][] map;
+    private String[][] map;
     private MapUpdate mapUpdate;
 
-    public ServerMazeMap(int width, int height) {
+    public ServerMazeMap(int width, int height) throws IOException {
         this.width = width/20;
         this.height = height/20;
-        this.map = generateMap();
+        this.map = readMap("map1.txt");
     }
 
     public void setMapUpdate(MapUpdate mapUpdate) {
@@ -30,25 +35,18 @@ public class ServerMazeMap implements Serializable {
         return mapUpdate;
     }
 
-    private String[][] generateMap() {
-        String[][] tempMap = new String[width][height];
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                //sides
-                if(i == 0 || j == 0 || i == width-1 || j == height-1){
-                    tempMap[i][j] = "W";
-                }
-                if (Math.random()>0.85) {
-                    tempMap[i][j] = "W";
-                } else if (tempMap[i][j] == null){
-                    tempMap[i][j] = "F";
-                }
-//
+    private String[][] readMap(String fileName) throws IOException {
+        List<String> lines = Files.readAllLines(Paths.get("src", "main", "resources", fileName));
+        map = new String[lines.get(0).length()][lines.size()];
+        for (int i = 0; i < lines.size(); i++) {
+            for (int j = 0; j < lines.get(0).length(); j++) {
+                map[j][i] = lines.get(i).substring(j,j+1);
             }
-//
-        }
-        return tempMap;
+
     }
+        return map;
+    }
+
     public String[][] getMap() {
         return this.map;
     }
