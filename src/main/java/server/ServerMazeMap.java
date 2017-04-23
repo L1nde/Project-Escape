@@ -1,5 +1,6 @@
 package server;
 
+import general.Ghosts.Tile;
 import general.MapUpdate;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -15,6 +16,7 @@ public class ServerMazeMap implements Serializable {
     private final int height;
     private final String[][] map;
     private MapUpdate mapUpdate;
+    private Tile[][] tiles;
 
     public ServerMazeMap(int width, int height) {
         this.width = width/20;
