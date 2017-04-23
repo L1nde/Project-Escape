@@ -8,10 +8,11 @@ import org.newdawn.slick.util.pathfinding.Path;
 import server.ServerMazeMap;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class GhostLinde implements GhostObjects, Serializable {
     private float x;
@@ -19,22 +20,20 @@ public class GhostLinde implements GhostObjects, Serializable {
     private float speed;
     private List<Tile> open = new ArrayList<>();
     private List<Tile> closed = new ArrayList<>();
-    private Tile[][] tiles;
-    private int counter;
+    private List<String> tiles = new ArrayList<>();
+    private String[][] map;
+    private boolean moving = false;
     private Path path = null;
+    private int count = 0;
+    private Path.Step step;
 
 
     public GhostLinde(float x, float y, float speed, ServerMazeMap smap) {
         this.x = x;
         this.y = y;
         this.speed = speed;
-        String[][] map = smap.getMap();
-        this.tiles = new Tile[40][30];
-        for (int i = 0; i < 40; i++) {
-            for (int j = 0; j < 30; j++) {
-                tiles[i][j] = new Tile(i, j);
-            }
-        }
+        this.map = smap.getMap();
+
     }
 
 
@@ -51,63 +50,45 @@ public class GhostLinde implements GhostObjects, Serializable {
 
     @Override
     public void calculateNewPos(double timeDelta, ServerMazeMap map, Map<Integer, PlayerState> playerStates) {
-        if (tiles == null){
-
-        }
-        if (path == null){
-            int playerCoordsX = (int) Math.floor(playerStates.get(0).getX()/20);
-            int playerCoordsY = (int) Math.floor(playerStates.get(0).getY()/20);
-            path = pathFinder((int) Math.floor(x/20), (int) Math.floor(y/20), playerCoordsX, playerCoordsY, map.getMap());
-
-        }
+//        if (path == null){
+//            int playerCoordsX = (int) Math.floor(playerStates.get(0).getX()/20);
+//            int playerCoordsY = (int) Math.floor(playerStates.get(0).getY()/20);
+//            ExecutorService pool = Executors.newFixedThreadPool(1);
+//            Future<Path> submit;
+//            try {
+//                submit = pool.submit(new PathFinderThread((int)Math.floor(x/20), (int)Math.floor(y/20), playerCoordsX, playerCoordsY, this.map));
+//            } finally {
+//                pool.shutdown();
+//            }
+//            try {
+//                path = submit.get();
+//            } catch (InterruptedException | ExecutionException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//        if (path != null){
+//            if (!moving){
+//                step = path.getStep(count);
+//                count++;
+//                moving = true;
+//            }
+//            if (count == path.getLength()){
+//                path = null;
+//                count = 0;
+//            }
+//            moveTile(step);
+//        }
     }
 
-    private void moveTile(){
-
+    private void moveTile(Path.Step step){
+        if (step.getX() == (int)Math.floor(x/20) && step.getY() == (int)Math.floor(y/20)){
+            moving = false;
+        }
+//        System.out.println(step.getX());
+//        System.out.println(step.getY());
+        x += (step.getX()-(int)Math.floor(x/20))*0.5;
+        y +=(step.getY()-(int)Math.floor(y/20))*0.5;
     }
 
-    private Path pathFinder(int sx, int sy, int tx, int ty, String[][] map){
-        open.clear();
-        closed.clear();
-        open.add(tiles[sx][sy]);
-        while (open.size() != 0){
-            Tile current = open.get(0);
-            if (current == tiles[tx][ty]){
-                break;
-            }
-            open.remove(current);
-            closed.add(current);
-            for (int i = -1; i < 2; i++) {
-                for (int j = -1; j < 2; j++) {
-                    if (i == 0 && j == 0){
-                        continue;
-                    }
-                    Tile next = tiles[current.getX()+i][current.getY()+j];
-                    if (!map[current.getX()+i][current.getY()+j].equals("W")){
-                        if (next.getCost() > current.getCost() + 1){
-                            open.remove(next);
-                            closed.remove(next);
-                        }
-                        if (!open.contains(next) && !closed.contains(next)){
-                            next.setCost(current.getCost() + 1);
-                            open.add(next);
-                            next.setParent(current);
-                            Collections.sort(open);
-                        }
-                    }
-                }
-            }
-        }
-        if (tiles[tx][ty].getParent() == null){
-            return null;
-        }
-        Path path = new Path();
-        Tile target = tiles[tx][ty];
-        while (target != tiles[sx][sy]){
-            path.prependStep(target.getX(), target.getY());
-            target = target.getParent();
-        }
-        path.prependStep(sx, sy);
-        return path;
-    }
+
 }
