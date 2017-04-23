@@ -29,9 +29,9 @@ public class GhostLinde implements GhostObjects, Serializable {
         this.y = y;
         this.speed = speed;
         String[][] map = smap.getMap();
-        this.tiles = new Tile[10][10];
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
+        this.tiles = new Tile[40][30];
+        for (int i = 0; i < 40; i++) {
+            for (int j = 0; j < 30; j++) {
                 tiles[i][j] = new Tile(i, j);
             }
         }
