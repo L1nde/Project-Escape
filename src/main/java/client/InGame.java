@@ -44,7 +44,7 @@ public class InGame extends BasicGameState {
     public void init(GameContainer container, StateBasedGame game) throws SlickException{
         container.setAlwaysRender(true);
         System.out.println("init done");
-        this.floorTexture = new Image("resources/floor800x600.png");
+        this.floorTexture = new Image("src/main/resources/floor800x600.png");
 
     }
 

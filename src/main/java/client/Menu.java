@@ -32,10 +32,8 @@ public class Menu extends BasicGameState {
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         g.setColor(Color.blue);
 
-
         g.draw(playButton);
         g.drawString("Play", playButton.getX()+10, playButton.getY()+10);
-
 
         g.draw(exitButton);
         g.drawString("Exit", exitButton.getX()+10, exitButton.getY()+10);

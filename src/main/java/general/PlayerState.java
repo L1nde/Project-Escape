@@ -76,32 +76,34 @@ public class PlayerState implements Serializable {
             String[][] smap = map.getMap();
             //collision
             //up
+            float x1 = x + 10;
+            float y1 = y + 10;
             if (dy < 0 && !(smap[newPosTilesY[0][0]][newPosTilesY[0][1]].equals("W") || smap[newPosTilesY[1][0]][newPosTilesY[1][1]].equals("W"))){
                 y += dy;
-                if(smap[(int) Math.floor((x+10)/20.0)][(int) Math.floor((y+5)/20.0)].equals("F")) {
-                    smap[(int) Math.floor((x+10)/20.0)][(int) Math.floor((y+5)/20.0)] = "P";
-                    map.setMapUpdate(new MapUpdate((int) Math.floor((x+10)/20.0),(int) Math.floor((y+5)/20.0), "P"));
+                if(smap[(int) Math.floor((x1)/20.0)][(int) Math.floor((y+8)/20.0)].equals("F")) {
+                    smap[(int) Math.floor((x1)/20.0)][(int) Math.floor((y+8)/20.0)] = "P";
+                    map.setMapUpdate(new MapUpdate((int) Math.floor((x1)/20.0),(int) Math.floor((y+8)/20.0), "P"));
                 }
             //down
             } else if (dy > 0 && !(smap[newPosTilesY[2][0]][newPosTilesY[2][1]].equals("W") || smap[newPosTilesY[3][0]][newPosTilesY[3][1]].equals("W"))){
                 y += dy;
-                if(smap[(int) Math.floor((x+10)/20.0)][(int) Math.floor((y+15)/20.0)].equals("F")) {
-                    smap[(int) Math.floor((x+10)/20.0)][(int) Math.floor((y+15)/20.0)] = "P";
-                    map.setMapUpdate(new MapUpdate((int) Math.floor((x+10)/20.0),(int) Math.floor((y+15)/20.0), "P"));
+                if(smap[(int) Math.floor((x1)/20.0)][(int) Math.floor((y+12)/20.0)].equals("F")) {
+                    smap[(int) Math.floor((x1)/20.0)][(int) Math.floor((y+12)/20.0)] = "P";
+                    map.setMapUpdate(new MapUpdate((int) Math.floor((x1)/20.0),(int) Math.floor((y+12)/20.0), "P"));
                 }
             //right
             } if (dx < 0 && !(smap[newPosTilesX[0][0]][newPosTilesX[0][1]].equals("W") || smap[newPosTilesX[2][0]][newPosTilesX[2][1]].equals("W"))){
                 x += dx;
-                if(smap[(int) Math.floor((x+5)/20.0)][(int) Math.floor((y+10)/20.0)].equals("F")) {
-                    smap[(int) Math.floor((x+5)/20.0)][(int) Math.floor((y+10)/20.0)] = "P";
-                    map.setMapUpdate(new MapUpdate((int) Math.floor((x+5)/20.0),(int) Math.floor((y+10)/20.0), "P"));
+                if(smap[(int) Math.floor((x+8)/20.0)][(int) Math.floor((y1)/20.0)].equals("F")) {
+                    smap[(int) Math.floor((x+8)/20.0)][(int) Math.floor((y1)/20.0)] = "P";
+                    map.setMapUpdate(new MapUpdate((int) Math.floor((x+5)/20.0),(int) Math.floor((y1)/20.0), "P"));
                 }
             //left
             } else if (dx > 0 && !(smap[newPosTilesX[1][0]][newPosTilesX[1][1]].equals("W") || smap[newPosTilesX[3][0]][newPosTilesX[3][1]].equals("W"))){
                 x += dx;
-                if(smap[(int) Math.floor((x+15)/20.0)][(int) Math.floor((y+10)/20.0)].equals("F")) {
-                    smap[(int) Math.floor((x+15)/20.0)][(int) Math.floor((y+10)/20.0)] = "P";
-                    map.setMapUpdate(new MapUpdate((int) Math.floor((x+15)/20.0),(int) Math.floor((y+10)/20.0), "P"));
+                if(smap[(int) Math.floor((x+12)/20.0)][(int) Math.floor((y1)/20.0)].equals("F")) {
+                    smap[(int) Math.floor((x+12)/20.0)][(int) Math.floor((y1)/20.0)] = "P";
+                    map.setMapUpdate(new MapUpdate((int) Math.floor((x+12)/20.0),(int) Math.floor((y1)/20.0), "P"));
                 }
             }
             // TODO accelerated movement
