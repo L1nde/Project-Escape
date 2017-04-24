@@ -26,7 +26,7 @@ public class ServerMazeMap implements Serializable {
     public ServerMazeMap(int width, int height) throws IOException {
         this.width = width/20;
         this.height = height/20;
-        this.map = readMap("map.txt");
+        this.map = readMap("map1.txt");
     }
 
     public void setMapUpdate(MapUpdate mapUpdate) {

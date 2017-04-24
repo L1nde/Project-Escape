@@ -11,6 +11,7 @@ public class PlayerState implements Serializable {
     private double dx;
     private double dy;
     private float speed;
+    private int score;
 
     private PlayerInputState input;
     public PlayerState(float x, float y, float speed) {
@@ -18,6 +19,12 @@ public class PlayerState implements Serializable {
         this.y = y;
         this.speed = speed;
         input = new PlayerInputState();
+    }
+
+    public void reset(){
+        x = 100;
+        y = 100;
+        score = 0;
     }
 
     public float getX() {
@@ -65,6 +72,7 @@ public class PlayerState implements Serializable {
 
 
     public void calculateNewPos(float timeDelta, ServerMazeMap map){
+        System.out.println(score);
         //input may be sabotaged
         if(input.isMoving() && Double.isFinite(input.getAccelerationDirection())){
             dx = speed * timeDelta * Math.cos(input.getAccelerationDirection());
@@ -81,6 +89,7 @@ public class PlayerState implements Serializable {
                 if(smap[(int) Math.floor((x1)/20.0)][(int) Math.floor((y+8)/20.0)].equals("F")) {
                     smap[(int) Math.floor((x1)/20.0)][(int) Math.floor((y+8)/20.0)] = "P";
                     map.setMapUpdate(new MapUpdate((int) Math.floor((x1)/20.0),(int) Math.floor((y+8)/20.0), "P"));
+                    score++;
                 }
             //down
             } else if (dy > 0 && !(smap[newPosTilesY[2][0]][newPosTilesY[2][1]].equals("W") || smap[newPosTilesY[3][0]][newPosTilesY[3][1]].equals("W"))){
@@ -88,6 +97,7 @@ public class PlayerState implements Serializable {
                 if(smap[(int) Math.floor((x1)/20.0)][(int) Math.floor((y+12)/20.0)].equals("F")) {
                     smap[(int) Math.floor((x1)/20.0)][(int) Math.floor((y+12)/20.0)] = "P";
                     map.setMapUpdate(new MapUpdate((int) Math.floor((x1)/20.0),(int) Math.floor((y+12)/20.0), "P"));
+                    score++;
                 }
             //right
             } if (dx < 0 && !(smap[newPosTilesX[0][0]][newPosTilesX[0][1]].equals("W") || smap[newPosTilesX[2][0]][newPosTilesX[2][1]].equals("W"))){
@@ -95,6 +105,7 @@ public class PlayerState implements Serializable {
                 if(smap[(int) Math.floor((x+8)/20.0)][(int) Math.floor((y1)/20.0)].equals("F")) {
                     smap[(int) Math.floor((x+8)/20.0)][(int) Math.floor((y1)/20.0)] = "P";
                     map.setMapUpdate(new MapUpdate((int) Math.floor((x+5)/20.0),(int) Math.floor((y1)/20.0), "P"));
+                    score++;
                 }
             //left
             } else if (dx > 0 && !(smap[newPosTilesX[1][0]][newPosTilesX[1][1]].equals("W") || smap[newPosTilesX[3][0]][newPosTilesX[3][1]].equals("W"))){
@@ -102,6 +113,7 @@ public class PlayerState implements Serializable {
                 if(smap[(int) Math.floor((x+12)/20.0)][(int) Math.floor((y1)/20.0)].equals("F")) {
                     smap[(int) Math.floor((x+12)/20.0)][(int) Math.floor((y1)/20.0)] = "P";
                     map.setMapUpdate(new MapUpdate((int) Math.floor((x+12)/20.0),(int) Math.floor((y1)/20.0), "P"));
+                    score++;
                 }
             }
             // TODO accelerated movement
