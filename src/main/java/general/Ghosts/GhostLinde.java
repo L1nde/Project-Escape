@@ -34,9 +34,7 @@ public class GhostLinde {
                 if ((int) Math.floor(playerState.getX()/20) == Math.floor(x/20) && (int) Math.floor(playerState.getY()/20) == Math.floor(y/20))
                     playerState.reset();
             }
-
             if (path == null){
-                // Todo Try merging with pathfinder class
                 ExecutorService pool = Executors.newFixedThreadPool(1);
                 Future<Path> submit;
                 try {
@@ -68,7 +66,6 @@ public class GhostLinde {
     }
 
     private void moveTile(Path.Step step, float x, float y, GhostObject ghost){
-//        System.out.println(step.getX() + " " + step.getY() + " " + Math.floor(x/20) + " " + Math.floor(y/20));
         if (step.getX()*20 == (int)x && step.getY()*20 == (int)y){
             ghost.setMoving(false);
         }
@@ -78,13 +75,9 @@ public class GhostLinde {
         muutY = (step.getY()*20-y) == 0 ? 0 : muutY;
         if (muutX != 0 && muutY == 0){
             ghost.setX(x + muutX);
-
         }
         if (muutY != 0 && muutX == 0){
             ghost.setY(y + muutY);
-
         }
     }
-
-
 }

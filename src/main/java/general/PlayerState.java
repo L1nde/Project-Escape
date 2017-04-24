@@ -72,7 +72,6 @@ public class PlayerState implements Serializable {
 
 
     public void calculateNewPos(float timeDelta, ServerMazeMap map){
-        System.out.println(score);
         //input may be sabotaged
         if(input.isMoving() && Double.isFinite(input.getAccelerationDirection())){
             dx = speed * timeDelta * Math.cos(input.getAccelerationDirection());

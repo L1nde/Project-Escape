@@ -14,9 +14,6 @@ public class PathFinderThread implements Callable<Path>{
     private List<Tile> open = new ArrayList<>();
     private List<Tile> closed = new ArrayList<>();
     private Tile[][] tiles;
-    private Path path = null;
-    private int witdh;
-    private int height;
     private int sx;
     private int sy;
     private int tx;
