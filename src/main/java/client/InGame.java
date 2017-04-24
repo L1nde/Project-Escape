@@ -3,7 +3,7 @@ package client;
 import client.entities.Ghost;
 import client.entities.Player;
 import general.GameState;
-import general.Ghosts.GhostObjects;
+import general.Ghosts.GhostObject;
 import general.PlayerInputState;
 
 import general.PlayerState;
@@ -86,7 +86,7 @@ public class InGame extends BasicGameState {
             Player player = new Player(entry.getValue());
             player.render(container, g);
         }
-        for (Map.Entry<Integer, GhostObjects> entry : gameState.getGhosts().entrySet()) {
+        for (Map.Entry<Integer, GhostObject> entry : gameState.getGhosts().entrySet()) {
             Ghost ghost = new Ghost(entry.getValue());
             ghost.render(container, g);
         }

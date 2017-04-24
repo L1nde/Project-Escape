@@ -3,6 +3,7 @@ package general.Ghosts;/*
  */
 
 import org.newdawn.slick.util.pathfinding.Path;
+import server.ServerMazeMap;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,13 +23,13 @@ public class PathFinderThread implements Callable<Path>{
     private int ty;
     private String[][] map;
 
-    public PathFinderThread(int sx, int sy, int tx, int ty, String[][] map) {
+    public PathFinderThread(int sx, int sy, int tx, int ty, ServerMazeMap map) {
         this.tiles = new Tile[40][30];
         this.sx = sx;
         this.sy = sy;
         this.tx = tx;
         this.ty = ty;
-        this.map = map;
+        this.map = map.getMap();
         for (int i = 0; i < 40; i++) {
             for (int j = 0; j < 30; j++) {
                 tiles[i][j] = new Tile(i,j);
@@ -38,7 +39,6 @@ public class PathFinderThread implements Callable<Path>{
 
     @Override
     public Path call() throws Exception {
-        System.out.println(1);
         open.clear();
         closed.clear();
         open.add(tiles[sx][sy]);

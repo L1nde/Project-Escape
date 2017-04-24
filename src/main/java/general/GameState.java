@@ -1,6 +1,6 @@
 package general;
 
-import general.Ghosts.GhostObjects;
+import general.Ghosts.GhostObject;
 import server.ServerMazeMap;
 
 import java.io.Serializable;
@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentMap;
 
 public class GameState implements Serializable, Comparable<GameState>{
     final private Map<Integer, PlayerState> playerStates;
-    private final Map<Integer, GhostObjects> ghosts;
+    private final Map<Integer, GhostObject> ghosts;
     private MapUpdate mapUpdate;
     private int tick;
     final private float timePerTick;
@@ -37,7 +37,7 @@ public class GameState implements Serializable, Comparable<GameState>{
         return playerStates;
     }
 
-    public Map<Integer, GhostObjects> getGhosts() {
+    public Map<Integer, GhostObject> getGhosts() {
         return ghosts;
     }
 
@@ -56,7 +56,7 @@ public class GameState implements Serializable, Comparable<GameState>{
         playerStates.put(id, state);
     }
 
-    public void addGhost(int id, GhostObjects ghost){
+    public void addGhost(int id, GhostObject ghost){
         ghosts.put(id, ghost);
     }
 
@@ -64,9 +64,6 @@ public class GameState implements Serializable, Comparable<GameState>{
         if(targetTick > tick){
             for(Map.Entry<Integer, PlayerState> entry : playerStates.entrySet()){
                 entry.getValue().calculateNewPos((targetTick - tick)*timePerTick, map);
-            }
-            for (Map.Entry<Integer, GhostObjects> entry : ghosts.entrySet()) {
-                entry.getValue().calculateNewPos((targetTick - tick)*timePerTick, map, playerStates);
             }
             tick = targetTick;
         }

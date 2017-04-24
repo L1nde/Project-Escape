@@ -2,6 +2,7 @@ package server;
 
 import general.GameState;
 import general.Ghosts.GhostLinde;
+import general.Ghosts.GhostObject;
 import general.PlayerInputState;
 import general.PlayerState;
 
@@ -26,6 +27,7 @@ public class ServerTicker implements Runnable {
     final private long  tickDelay = (long)1e9f/60; // in nanoseconds
     final private float timePerTick = 1.0f;
     private ServerMazeMap map;
+    private GhostLinde pathGhosts;
     // Tickrate is 60 ticks/second at the moment.
 
     public ServerTicker(ServerMazeMap map) {
@@ -35,14 +37,16 @@ public class ServerTicker implements Runnable {
         this.gameStateDistributor = Collections.synchronizedMap(new HashMap<>());
         gameState = new GameState(0, timePerTick);
         this.map = map;
+        pathGhosts = new GhostLinde();
     }
 
     public void addPlayer(int newId){
         synchronized (this){
             lastInputs.putIfAbsent(newId, new PlayerInputState());
             gameStateDistributor.put(newId, new LinkedBlockingQueue<>());
-            gameState.addPlayer(newId, new PlayerState(playerDefaultX, playerDefaultY, playerDefaultSpeed));
-            gameState.addGhost(newId, new GhostLinde(500, 500, playerDefaultSpeed, map));
+            gameState.addPlayer(newId, new PlayerState(240, 220, playerDefaultSpeed));
+            gameState.addGhost(newId, new GhostObject(140, 140, playerDefaultSpeed));
+
         }
     }
 
@@ -61,6 +65,9 @@ public class ServerTicker implements Runnable {
         while(true){
             synchronized (this){
                 gameState.setInputs(lastInputs);
+                for (Map.Entry<Integer, GhostObject> entry : gameState.getGhosts().entrySet()) {
+                    pathGhosts.calculateNewPos(map, gameState.getPlayerStates(), entry.getValue(), entry.getKey());
+                }
                 gameState.nextState(tick +1, map);
                 ++tick;
                 for(Map.Entry<Integer, BlockingQueue<GameState> > entry : gameStateDistributor.entrySet()){

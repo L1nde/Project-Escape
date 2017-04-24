@@ -10,8 +10,6 @@ public class PlayerState implements Serializable {
     private float y;
     private double dx;
     private double dy;
-
-
     private float speed;
 
     private PlayerInputState input;
