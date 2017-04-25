@@ -12,6 +12,7 @@ public class PlayerState implements Serializable {
     private double dy;
     private float speed;
     private int score;
+    private int lives = 3;
 
     private PlayerInputState input;
     public PlayerState(float x, float y, float speed) {
@@ -22,25 +23,16 @@ public class PlayerState implements Serializable {
     }
 
     public void reset(){
-        x = 100;
-        y = 100;
-        score = 0;
-    }
+        // TODO game over
+        if (lives != 0){
+            x = 100;
+            y = 100;
+            score = 0;
+            lives--;
 
-    public float getX() {
-        return x;
-    }
+        }
 
-    public float getY() {
-        return y;
-    }
 
-    public double getdX() {
-        return dx;
-    }
-
-    public double getdY() {
-        return dy;
     }
 
     public int[][] getPosTiles(double dx, double dy) {
@@ -69,7 +61,6 @@ public class PlayerState implements Serializable {
     public void setInput(PlayerInputState input) {
         this.input = input;
     }
-
 
     public void calculateNewPos(float timeDelta, ServerMazeMap map){
         //input may be sabotaged
@@ -117,5 +108,29 @@ public class PlayerState implements Serializable {
             }
             // TODO accelerated movement
         }
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public double getdX() {
+        return dx;
+    }
+
+    public double getdY() {
+        return dy;
     }
 }

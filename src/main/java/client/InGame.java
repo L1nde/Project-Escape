@@ -13,9 +13,11 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import server.ServerMazeMap;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Timer;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -35,6 +37,9 @@ public class InGame extends BasicGameState {
     private StartScreen startScreen;
     private boolean pause = false;
     private Image floorTexture;
+    private int id = -1;
+    private long time;
+    private Music music;
 
     public InGame(StartScreen startScreen) {
         this.startScreen = startScreen;
@@ -44,7 +49,9 @@ public class InGame extends BasicGameState {
     public void init(GameContainer container, StateBasedGame game) throws SlickException{
         container.setAlwaysRender(true);
         System.out.println("init done");
-        this.floorTexture = new Image("src/main/resources/floor800x600.png");
+        this.floorTexture = new Image("src/main/resources/background920x600.png");
+        music = new Music("src/main/resources/ElevatorMusic.ogg");
+
 
     }
 
@@ -53,6 +60,8 @@ public class InGame extends BasicGameState {
         if (multiplayer && !communicatorCreated) {
             new Thread(new Communicator(sendData, receiveData, startScreen.getIP(), smap)).start();
             communicatorCreated = true;
+            time = System.currentTimeMillis();
+            music.loop();
             try {
                 map = new MazeMap(smap.take());
             } catch (InterruptedException e) {
@@ -80,17 +89,28 @@ public class InGame extends BasicGameState {
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         g.setColor(Color.white);
-        g.texture(new Rectangle(0,0,800,600), floorTexture, 1, 1,true);
+        g.texture(new Rectangle(0,0,920,600), floorTexture, 1, 1,true);
         map.render(container, game, g);
         for(Map.Entry<Integer, PlayerState> entry : gameState.getPlayerStates().entrySet()){
-            Player player = new Player(entry.getValue());
-            player.render(container, g);
+            if (entry.getValue().getLives() != 0){
+                Player player = new Player(entry.getValue());
+                player.render(container, g);
+            }
         }
         for (Map.Entry<Integer, GhostObject> entry : gameState.getGhosts().entrySet()) {
             Ghost ghost = new Ghost(entry.getValue());
             ghost.render(container, g);
         }
+        if (id ==-1){
+            id = gameState.getPlayerStates().size()-1;
+        }
+        g.drawString("Lives:" + gameState.getPlayerStates().get(id).getLives(), 810, 30);
+        g.drawString("Score:" + gameState.getPlayerStates().get(id).getScore(), 810, 50);
+        int seconds = Math.round((System.currentTimeMillis() - time)/1000);
+        g.drawString("Time: " + (((seconds/60)%60) <= 9 ? "0" : "") + (seconds/60)%60 + ":" + ((seconds%60) <= 9 ? "0" : "") + seconds%60, 810, 10);
+
     }
+
 
     @Override
     public void keyPressed(int key, char c) {
