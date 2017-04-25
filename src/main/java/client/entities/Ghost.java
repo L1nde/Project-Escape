@@ -17,7 +17,7 @@ public class Ghost {
     public Ghost(GhostObject ghost) {
         this.ghost = ghost;
         try {
-            ghostTexture = new Image("resources/ghostTexture.png");
+            ghostTexture = new Image("src/main/resources/ghostTexture.png");
         } catch (SlickException e) {
             throw new RuntimeException(e);
         }
