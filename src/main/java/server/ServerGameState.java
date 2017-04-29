@@ -1,72 +1,64 @@
 package server;
 
 import general.*;
-import server.Ghosts.GhostObjects;
+import server.Ghosts.Ghost;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 public class ServerGameState implements Comparable<ServerGameState>{
-    final private Map<Integer, PlayerState> playerStates;
-    private final Map<Integer, GhostObjects> ghosts;
-    private MapUpdate mapUpdate;
+    final private Map<Integer, Player> players;
+    private final Map<Integer, Ghost> ghosts;
+    private List<MapUpdate> mapUpdates;
     private int tick;
-    final private float timePerTick;
+    final private double timePerTick;
+    private final ServerMazeMap map;
 
-    public ServerGameState(int tick, float timePerTick) {
-        this.playerStates = new HashMap<>();
+    public ServerGameState(int tick, double timePerTick, ServerMazeMap map) {
+        this.players = new HashMap<>();
         this.ghosts = new HashMap<>();
         this.tick = tick;
         this.timePerTick = timePerTick;
-    }
-
-    public ServerGameState(ServerGameState other, ServerMazeMap map){
-        this(other.tick, other.timePerTick);
-        playerStates.putAll(other.playerStates);
-        mapUpdate = map.getMapUpdate();
-        ghosts.putAll(other.ghosts);
+        mapUpdates = map.getAsUpdates();
+        this.map = map;
     }
 
     public int getTick() {
         return tick;
     }
 
-    public Map<Integer, PlayerState> getPlayerStates() {
-        return playerStates;
-    }
-
-    public Map<Integer, GhostObjects> getGhosts() {
-        return ghosts;
-    }
-
-    public MapUpdate getMapUpdate() {
-        return mapUpdate;
-    }
-
     public void setInputs(ConcurrentMap<Integer, PlayerInputState> lastInputs) {
-        for(Map.Entry<Integer, PlayerState> entry : playerStates.entrySet()){
+        for(Map.Entry<Integer, Player> entry : players.entrySet()){
             PlayerInputState newInput = lastInputs.getOrDefault(entry.getKey(), new PlayerInputState());
             entry.getValue().setInput(newInput);
         }
     }
 
-    public void addPlayer(int id, PlayerState state){
-        playerStates.put(id, state);
+    public void addPlayer(int id, Player cur){
+        players.put(id, cur);
     }
 
-    public void addGhost(int id, GhostObjects ghost){
+    public void addGhost(int id, Ghost ghost){
         ghosts.put(id, ghost);
     }
 
-    public void nextState(int targetTick, ServerMazeMap map){
+    public void nextState(int targetTick){
         if(targetTick > tick){
-            for(Map.Entry<Integer, PlayerState> entry : playerStates.entrySet()){
-                entry.getValue().calculateNewPos((targetTick - tick)*timePerTick, map);
+            mapUpdates.clear();
+            for(Map.Entry<Integer, Player> entry : players.entrySet()){
+                entry.getValue().calculateNewPos((targetTick - tick)*timePerTick);
             }
-            for (Map.Entry<Integer, GhostObjects> entry : ghosts.entrySet()) {
-                entry.getValue().calculateNewPos((targetTick - tick)*timePerTick, map);
+            for (Map.Entry<Integer, Ghost> entry : ghosts.entrySet()) {
+                entry.getValue().calculateNewPos((targetTick - tick)*timePerTick);
+            }
+            for(Map.Entry<Integer, Player> entry : players.entrySet()){
+                mapUpdates.addAll(entry.getValue().getMapUpdates());
+            }
+            for(MapUpdate cur : mapUpdates){
+                map.apply(cur);
             }
             tick = targetTick;
         }
@@ -79,10 +71,14 @@ public class ServerGameState implements Comparable<ServerGameState>{
 
     public GameState toTransmitable(){
         Map<Integer, GhostState> ghostsTransmit = new HashMap<>();
-        for (Map.Entry<Integer, GhostObjects> entry : ghosts.entrySet()) {
+        for (Map.Entry<Integer, Ghost> entry : ghosts.entrySet()) {
             ghostsTransmit.put(entry.getKey(), entry.getValue().getAsState());
         }
-        return new GameState(playerStates, ghostsTransmit,
-                mapUpdate, tick, timePerTick);
+        Map<Integer, PlayerState> playersTransmit = new HashMap<>();
+        for (Map.Entry<Integer, Player> entry : players.entrySet()) {
+            playersTransmit.put(entry.getKey(), entry.getValue().getAsState());
+        }
+        return new GameState(playersTransmit, ghostsTransmit,
+                new ArrayList<>(mapUpdates), tick, timePerTick);
     }
 }

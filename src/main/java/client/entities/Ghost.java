@@ -8,23 +8,27 @@ import org.newdawn.slick.geom.Rectangle;
 
 
 public class Ghost {
-    private float x;
-    private float y;
     private float size = 18;
-    private Image ghostTexture;
-    private GhostState ghost;
+    private static boolean texturesLoaded = false;
+    private static Image ghostTexture;
+    private GhostState state;
 
     public Ghost(GhostState ghost) {
-        this.ghost = ghost;
-        try {
-            ghostTexture = new Image("resources/ghostTexture.png");
-        } catch (SlickException e) {
-            throw new RuntimeException(e);
+        this.state = ghost;
+        if(!texturesLoaded){
+            try {
+                ghostTexture = new Image("resources/ghostTexture.png");
+            } catch (SlickException e) {
+                throw new RuntimeException(e);
+            }
+            texturesLoaded = true;
         }
     }
 
     public void render(GameContainer container, Graphics g){
         g.setColor(Color.white);
-        g.texture(new Rectangle(ghost.getX(), ghost.getY(), size, size), ghostTexture, 1, 1, true);
+        float x = (float) state.getLoc().getX();
+        float y = (float) state.getLoc().getY();
+        g.texture(new Rectangle(x-size/2, y-size/2, size, size), ghostTexture, 1, 1, true);
     }
 }

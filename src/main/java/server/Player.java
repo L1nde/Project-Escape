@@ -1,0 +1,144 @@
+package server;
+
+import general.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+
+public class Player {
+    private Point loc;
+    private double speed;
+    private PlayerInputState input;
+    private ServerMazeMap map;
+    static int iter = 0;
+
+    public Player(Point loc, double speed, ServerMazeMap map) {
+        this.loc = loc;
+        this.speed = speed;
+        input = new PlayerInputState();
+        this.map = map;
+    }
+
+    public PlayerInputState getInput() {
+        return input;
+    }
+
+    public void setInput(PlayerInputState input) {
+        this.input = input;
+    }
+
+    public double getMovementDir(){
+        return input.getAccelerationDirection();
+    }
+
+    public Point getLoc() {
+        return loc;
+    }
+
+    public void calculateNewPos(double timeDelta){
+        ++iter;
+        if(input.isMoving()){
+            while(timeDelta > ServerTicker.EPS){
+                double dx = speed * timeDelta * Math.cos(input.getAccelerationDirection());
+                double dy = speed * timeDelta * Math.sin(input.getAccelerationDirection());
+                if(map.getFreeXRange(loc, dx) != 0.0 && map.getFreeYRange(loc, dy) != 0.0){
+                    double cdx, cdy;
+                    //Direction prioritization to enter door like places easier.
+                    //Moving in both directions at once may move into wall.
+                    boolean bias = Math.abs(dx) > Math.abs(dy);
+                    //Use random to be unbiased on diagonal movement.
+                    if(Math.abs(Math.abs(dx/dy) - 1) < 0.05){
+                        bias = ThreadLocalRandom.current().nextBoolean();
+                    }
+                    if(bias){
+                        cdx = Math.copySign(Math.min(map.getFreeXRange(loc, dx), Math.abs(dx)), dx);
+                        loc = new Point(loc.getX() + cdx, loc.getY());
+                        cdy = Math.copySign(Math.min(map.getFreeYRange(loc, dy), Math.abs(dy)), dy);
+                        loc = new Point(loc.getX(), loc.getY() + cdy);
+                    } else {
+                        cdy = Math.copySign(Math.min(map.getFreeYRange(loc, dy), Math.abs(dy)), dy);
+                        loc = new Point(loc.getX(), loc.getY() + cdy);
+                        cdx = Math.copySign(Math.min(map.getFreeXRange(loc, dx), Math.abs(dx)), dx);
+                        loc = new Point(loc.getX() + cdx, loc.getY());
+                    }
+                    double distDelta = Math.sqrt(cdx*cdx + cdy*cdy);
+                    timeDelta -= distDelta/speed;
+                } else if(map.getFreeYRange(loc, dy) != 0.0){
+                    MapPoint idx = new MapPoint(loc);
+                    if(dx > 0){
+                        idx = idx.right();
+                    } else{
+                        idx = idx.left();
+                    }
+                    boolean intoWall = Math.abs(dy/dx) < Math.tan(Math.PI/8);
+                    dy = Math.copySign(speed * timeDelta, dy);
+                    dx = 0;
+                    //If there is a empty space near the blocked direction and
+                    // movement direction is closely enough toward it,
+                    // move parallely to reach it.
+                    if(map.getTile(idx) != TileType.WALL && intoWall){
+                        if(idx.getPoint().getY() > loc.getY()){
+                            dy = Math.copySign(dy, 1);
+                        } else {
+                            dy = Math.copySign(dy, -1);
+                        }
+                    } else if(intoWall) { //To stop sideways motion when moving into wall
+                        break;
+                    }
+                    if(map.getFreeYRange(loc, dy) == 0.0){
+                        break;
+                    }
+                    double cdy = Math.copySign(Math.min(map.getFreeYRange(loc, dy), Math.abs(dy)), dy);
+                    loc = new Point(loc.getX(), loc.getY() + cdy);
+                    double distDelta = Math.abs(cdy);
+                    timeDelta -= distDelta/speed;
+                } else if(map.getFreeXRange(loc, dx) != 0.0){
+                    MapPoint idx = new MapPoint(loc);
+                    if(dy > 0){
+                        idx = idx.up();
+                    } else{
+                        idx = idx.down();
+                    }
+                    boolean intoWall = Math.abs(dx/dy) < Math.tan(Math.PI/8);
+                    dx = Math.copySign(speed * timeDelta, dx);
+                    dy = 0;
+                    //If there is a empty space near the blocked direction and
+                    // movement direction is closely enough toward it,
+                    // move parallely to reach it.
+                    if(map.getTile(idx) != TileType.WALL && intoWall){
+                        if(idx.getPoint().getX() > loc.getX()){
+                            dx = Math.copySign(dx, 1);
+                        } else {
+                            dx = Math.copySign(dx, -1);
+                        }
+                    } else if(intoWall) { //To stop sideways motion when moving into wall
+                        break;
+                    }
+                    if(map.getFreeXRange(loc, dx) == 0.0){
+                        break;
+                    }
+                    double cdx = Math.copySign(Math.min(map.getFreeXRange(loc, dx), Math.abs(dx)), dx);
+                    loc = new Point(loc.getX() + cdx, loc.getY());
+                    double distDelta = Math.abs(cdx);
+                    timeDelta -= distDelta/speed;
+                } else {
+                    timeDelta = 0;
+                }
+            }
+            // TODO accelerated movement
+        }
+    }
+    public List<MapUpdate> getMapUpdates(){
+        List<MapUpdate> res = new ArrayList<>();
+        MapPoint idx = new MapPoint(loc);
+        if(map.getTile(idx) == TileType.FOOD){
+            res.add(new MapUpdate(idx.getX(), idx.getY(), TileType.EMPTY));
+        }
+        return res;
+    }
+
+    public PlayerState getAsState(){
+        return new PlayerState(loc, speed, input);
+    }
+}

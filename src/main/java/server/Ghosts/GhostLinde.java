@@ -9,32 +9,26 @@ import server.ServerMazeMap;
 
 import java.io.Serializable;
 
-public class GhostLinde implements GhostObjects, Serializable {
-    private float x;
-    private float y;
-    private float speed;
+public class GhostLinde implements Ghost, Serializable {
+    private double x;
+    private double y;
+    private double speed;
+    private ServerMazeMap map;
 
-
-    public GhostLinde(float x, float y, float speed) {
+    public GhostLinde(double x, double y, double speed, ServerMazeMap map) {
         this.x = x;
         this.y = y;
         this.speed = speed;
-    }
-
-
-
-    @Override
-    public float getX() {
-        return x;
+        this.map = map;
     }
 
     @Override
-    public float getY() {
-        return y;
+    public Point getLoc() {
+        return new Point(x, y);
     }
 
     @Override
-    public void calculateNewPos(double timeDelta, ServerMazeMap map) {
+    public void calculateNewPos(double timeDelta) {
 
     }
     @Override

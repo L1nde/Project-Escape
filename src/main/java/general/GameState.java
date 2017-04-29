@@ -1,23 +1,21 @@
 package general;
 
-import server.ServerMazeMap;
-
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GameState implements Serializable, Comparable<GameState>{
     final private Map<Integer, PlayerState> playerStates;
     private final Map<Integer, GhostState> ghosts;
-    private MapUpdate mapUpdate;
+    private final List<MapUpdate> mapUpdates;
     private int tick;
-    final private float timePerTick;
+    final private double timePerTick;
 
     public GameState(Map<Integer, PlayerState> playerStates, Map<Integer, GhostState> ghosts,
-                     MapUpdate mapUpdate, int tick, float timePerTick) {
+                     List<MapUpdate> mapUpdates, int tick, double timePerTick) {
         this.playerStates = playerStates;
         this.ghosts = ghosts;
-        this.mapUpdate = mapUpdate;
+        this.mapUpdates = mapUpdates;
         this.tick = tick;
         this.timePerTick = timePerTick;
     }
@@ -34,8 +32,8 @@ public class GameState implements Serializable, Comparable<GameState>{
         return ghosts;
     }
 
-    public MapUpdate getMapUpdate() {
-        return mapUpdate;
+    public List<MapUpdate> getMapUpdates() {
+        return mapUpdates;
     }
 
     @Override

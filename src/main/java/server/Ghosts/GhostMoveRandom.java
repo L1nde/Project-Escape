@@ -2,50 +2,59 @@ package server.Ghosts;
 
 import general.GhostState;
 import general.Point;
+import server.MapPoint;
 import server.ServerMazeMap;
 import server.ServerTicker;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class GhostMoveRandom implements GhostObjects{
-    private float speed;
-    private Point location;
-    private List<Point> path;
-    public GhostMoveRandom(float x, float y, float speed) {
-        location = new Point(x, y);
+public class GhostMoveRandom implements Ghost {
+    private double speed;
+    private Point loc;
+    private List<Point> path = new ArrayList<>();
+    private ServerMazeMap map;
+
+    public GhostMoveRandom(double x, double y, double speed, ServerMazeMap map) {
+        loc = new Point(x, y);
+        loc = map.findRandomValidPoint(loc, 100);
+        loc = new MapPoint(loc).getPoint();
         this.speed = speed;
+        this.map = map;
     }
+
+    /**
+     * Repeatedly selects a random free centrepoint in some range
+     * and moves toward it along the shortest path.
+     */
     @Override
-    public void calculateNewPos(double timeDelta, ServerMazeMap map) {
+    public void calculateNewPos(double timeDelta) {
         while(timeDelta > ServerTicker.EPS){
             if(path.isEmpty()){
-                path = map.findShortestPath(location, map.findRandomValidPoint(location, 1000));
+                Point dest = map.findRandomValidPoint(loc, 200);
+                dest = new MapPoint(dest).getPoint();
+                path = map.findShortestPath(loc, dest);
             }
             if(!path.isEmpty()){
-                float distNxt = location.distance(path.get(0));
+                double distNxt = loc.distance(path.get(0));
                 if(distNxt < ServerTicker.EPS){
                     path.remove(0);
                 } else {
-                    float distDelta = (float) Math.min(distNxt, speed*timeDelta);
+                    double distDelta = Math.min(distNxt, speed*timeDelta);
                     timeDelta -= distDelta/speed;
-                    location = location.moveTowards(path.get(0), distDelta);
+                    loc = loc.moveTowards(path.get(0), distDelta);
                 }
             }
         }
     }
 
     @Override
-    public float getX() {
-        return location.getX();
-    }
-
-    @Override
-    public float getY() {
-        return location.getY();
+    public Point getLoc() {
+        return loc;
     }
 
     @Override
     public GhostState getAsState() {
-        return new GhostState(location);
+        return new GhostState(loc);
     }
 }

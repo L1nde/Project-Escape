@@ -1,7 +1,8 @@
-package general;
+package server;
 
 
-import server.ServerMazeMap;
+import general.Point;
+import general.TileType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,6 +17,11 @@ public class MapPoint {
         this.x = x;
         this.y = y;
     }
+    public MapPoint(Point point) {
+        x = (int)(point.getX()/20);
+        y = (int)(point.getY()/20);
+    }
+
 
     public void visit(){
         visited.add(this);
@@ -29,30 +35,39 @@ public class MapPoint {
         visited.clear();
     }
 
+    public MapPoint up(){
+        return new MapPoint(x, y+1);
+    }
+    public MapPoint down(){
+        return new MapPoint(x, y-1);
+    }
+    public MapPoint left(){
+        return new MapPoint(x-1, y);
+    }
+    public MapPoint right(){
+        return new MapPoint(x+1, y);
+    }
+
     public List<MapPoint> neighbours(ServerMazeMap maze){
         List<MapPoint> res = new ArrayList<>();
         {
-            MapPoint candidate = new MapPoint(x-1, y);
-            if(!maze.inWall(candidate)){
-                res.add(candidate);
+            if(maze.getTile(left()) != TileType.WALL){
+                res.add(left());
             }
         }
         {
-            MapPoint candidate = new MapPoint(x+1, y);
-            if(!maze.inWall(candidate)){
-                res.add(candidate);
+            if(maze.getTile(right()) != TileType.WALL){
+                res.add(right());
             }
         }
         {
-            MapPoint candidate = new MapPoint(x, y-1);
-            if(!maze.inWall(candidate)){
-                res.add(candidate);
+            if(maze.getTile(up()) != TileType.WALL){
+                res.add(up());
             }
         }
         {
-            MapPoint candidate = new MapPoint(x, y+1);
-            if(!maze.inWall(candidate)){
-                res.add(candidate);
+            if(maze.getTile(down()) != TileType.WALL){
+                res.add(down());
             }
         }
         return res;

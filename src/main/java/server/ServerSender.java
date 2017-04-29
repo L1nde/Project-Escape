@@ -19,7 +19,8 @@ public class ServerSender implements Callable<Void>{
 
     @Override
     public Void call() throws Exception {
-        netOut.writeObject(map);
+        GameState curMapState = (new ServerGameState(0, 0, map)).toTransmitable();
+        netOut.writeObject(curMapState);
         while(true){
             GameState gameState = myStateQueue.take();
             //Without reset values inside map wont get updated on receiving end.

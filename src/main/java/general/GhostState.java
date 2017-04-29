@@ -3,17 +3,13 @@ package general;
 import java.io.Serializable;
 
 public class GhostState implements Serializable{
-    Point location;
+    final Point loc;
 
-    public GhostState(Point location) {
-        this.location = location;
+    public GhostState(Point loc) {
+        this.loc = loc;
     }
 
-    public float getX() {
-        return location.getX();
-    }
-
-    public float getY() {
-        return location.getY();
+    public Point getLoc() {
+        return loc;
     }
 }

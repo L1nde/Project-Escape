@@ -1,6 +1,7 @@
 package client.entities;
 
 import client.MapObjects;
+import general.Point;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
@@ -11,16 +12,20 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 public class Food implements MapObjects{
 
-    private final int[] cords;
+    private final Point loc;
     private final int radius = 5;
-    private Image foodTexture;
+    private static boolean texturesLoaded = false;
+    private static Image foodTexture;
 
-    public Food(int[] cords) {
-        this.cords = cords;
-        try {
-            this.foodTexture = new Image("resources/PizzaTexture.png");
-        } catch (SlickException e) {
-            throw new RuntimeException(e);
+    public Food(Point loc) {
+        this.loc = loc;
+        if(!texturesLoaded){
+            try {
+                this.foodTexture = new Image("resources/PizzaTexture.png");
+            } catch (SlickException e) {
+                throw new RuntimeException(e);
+            }
+            texturesLoaded = true;
         }
     }
 
@@ -28,7 +33,7 @@ public class Food implements MapObjects{
     public void render(GameContainer container, StateBasedGame game, Graphics g) {
         g.setColor(Color.white);
 //        g.texture(new Rectangle(cords[0]+4, cords[1]+6, 10, 5), foodTexture, 1, 1, true);
-        g.texture(new Circle(cords[0] + 10 - radius/2, cords[1] + 10 - radius/2, radius, radius), foodTexture, 1, 1, true);
+        g.texture(new Circle((float)loc.getX() - radius/2, (float)loc.getY()  - radius/2, radius, radius), foodTexture, 1, 1, true);
 //        g.fillOval(cords[0] + 10 - radius/2, cords[1] + 10 - radius/2, radius, radius);
     }
 }

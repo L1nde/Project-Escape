@@ -22,6 +22,7 @@ public class ServerReceiver implements Callable<Void>{
     public Void call() throws IOException, ClassNotFoundException {
         while(true){
             PlayerInputState receivedInput = (PlayerInputState) netIn.readObject();
+            receivedInput.fixFormating();
             lastInputs.put(id, receivedInput);
         }
     }

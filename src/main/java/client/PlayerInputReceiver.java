@@ -24,7 +24,7 @@ public class PlayerInputReceiver {
             return new PlayerInputState();
         }
         else{
-            return new PlayerInputState((float)Math.atan2(dy, dx));
+            return new PlayerInputState(Math.atan2(dy, dx));
         }
     }
 

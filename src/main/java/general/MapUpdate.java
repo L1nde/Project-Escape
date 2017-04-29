@@ -8,9 +8,9 @@ import java.io.Serializable;
 public class MapUpdate implements Serializable {
     final private int x;
     final private int y;
-    private String newTile;
+    final private TileType newTile;
 
-    public MapUpdate(int x, int y, String newTile) {
+    public MapUpdate(int x, int y, TileType newTile) {
         this.x = x;
         this.y = y;
         this.newTile = newTile;
@@ -24,7 +24,7 @@ public class MapUpdate implements Serializable {
         return y;
     }
 
-    public String getNewTile() {
+    public TileType getTileType() {
         return newTile;
     }
 }

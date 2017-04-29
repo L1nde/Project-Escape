@@ -2,22 +2,16 @@ package client;
 
 import client.entities.Ghost;
 import client.entities.Player;
-import general.GameState;
-import general.GhostState;
-import server.Ghosts.GhostObjects;
-import general.PlayerInputState;
+import general.*;
 
-import general.PlayerState;
+import general.GameState;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.state.BasicGameState;
-import org.newdawn.slick.state.StateBasedGame;
-import server.ServerMazeMap;
+import org.newdawn.slick.state.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -31,8 +25,7 @@ public class InGame extends BasicGameState {
     private boolean communicatorCreated = false;
     private BlockingQueue<GameState> receiveData = new LinkedBlockingQueue<>();
     private BlockingQueue<PlayerInputState> sendData = new LinkedBlockingQueue<>();
-    private BlockingQueue<ServerMazeMap> smap = new ArrayBlockingQueue<>(1);
-    private MazeMap map;
+    private MazeMap map = new MazeMap(800, 600);
     private StartScreen startScreen;
     private boolean pause = false;
     private Image floorTexture;
@@ -52,13 +45,8 @@ public class InGame extends BasicGameState {
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         if (multiplayer && !communicatorCreated) {
-            new Thread(new Communicator(sendData, receiveData, startScreen.getIP(), smap)).start();
+            new Thread(new Communicator(sendData, receiveData, startScreen.getIP())).start();
             communicatorCreated = true;
-            try {
-                map = new MazeMap(smap.take());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
         if (pause){
             pause = false;
@@ -66,13 +54,19 @@ public class InGame extends BasicGameState {
         }
         ArrayList<GameState> receivedGameStates = new ArrayList<>();
         receiveData.drainTo(receivedGameStates);
+        Collections.sort(receivedGameStates);
+        for(GameState state : receivedGameStates){
+            if(gameState == null || state.compareTo(gameState) != -1){
+                for(MapUpdate cur : state.getMapUpdates()){
+                    map.update(cur);
+                }
+            }
+        }
         if(!receivedGameStates.isEmpty()){
-            GameState mostRecentReceived = Collections.max(receivedGameStates);
+            GameState mostRecentReceived = receivedGameStates.get(receivedGameStates.size()-1);
             if(gameState == null || mostRecentReceived.compareTo(gameState) == 1){
                 gameState = mostRecentReceived;
             }
-        }if(gameState != null){
-            map.update(gameState.getMapUpdate());
         }
         PlayerInputState freshInput = PlayerInputReceiver.receive(container);
         sendData.add(freshInput);
