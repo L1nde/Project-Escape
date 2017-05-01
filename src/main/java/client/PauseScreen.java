@@ -9,7 +9,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-public class pauseScreen extends BasicGameState {
+public class PauseScreen extends BasicGameState {
     private boolean pause = true;
 
     @Override

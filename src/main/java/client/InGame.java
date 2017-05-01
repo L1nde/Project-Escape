@@ -104,10 +104,10 @@ public class InGame extends BasicGameState {
         if (id ==-1){
             id = gameState.getPlayerStates().size()-1;
         }
-        g.drawString("Lives:" + gameState.getPlayerStates().get(id).getLives(), 810, 30);
-        g.drawString("Score:" + gameState.getPlayerStates().get(id).getScore(), 810, 50);
         int seconds = Math.round((System.currentTimeMillis() - time)/1000);
         g.drawString("Time: " + (((seconds/60)%60) <= 9 ? "0" : "") + (seconds/60)%60 + ":" + ((seconds%60) <= 9 ? "0" : "") + seconds%60, 810, 10);
+        g.drawString("Lives:" + gameState.getPlayerStates().get(id).getLives(), 810, 30);
+        g.drawString("Score:" + gameState.getPlayerStates().get(id).getScore(), 810, 50);
 
     }
 

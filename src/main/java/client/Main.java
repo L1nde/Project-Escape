@@ -3,7 +3,6 @@ package client;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.state.GameState;
 import org.newdawn.slick.state.StateBasedGame;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +21,7 @@ public class Main extends StateBasedGame {
         StartScreen startScreen = new StartScreen();
         this.addState(startScreen);
         this.addState(new InGame(startScreen));
-        this.addState(new pauseScreen());
+        this.addState(new PauseScreen());
     }
 
     public static void main(String[] args) {
