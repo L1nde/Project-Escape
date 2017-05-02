@@ -20,10 +20,10 @@ public class Player{
     public Player(PlayerState state) {
         this.state = state;
         try {
-            this.pacmanRightTexture = new Image("src/main/resources/pacmanRightTexture.png");
-            this.pacmanLeftTexture = new Image("src/main/resources/pacmanLeftTexture.png");
-            this.pacmanUpTexture = new Image("src/main/resources/pacmanUpTexture.png");
-            this.pacmanDownTexture = new Image("src/main/resources/pacmanDownTexture.png");
+            this.pacmanRightTexture = new Image("src/main/resources/textures/pacmanRightTexture.png");
+            this.pacmanLeftTexture = new Image("src/main/resources/textures/pacmanLeftTexture.png");
+            this.pacmanUpTexture = new Image("src/main/resources/textures/pacmanUpTexture.png");
+            this.pacmanDownTexture = new Image("src/main/resources/textures/pacmanDownTexture.png");
         } catch (SlickException e) {
             throw new RuntimeException(e);
         }

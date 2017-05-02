@@ -1,6 +1,6 @@
 package general;
 
-import general.Ghosts.GhostObject;
+import general.ghosts.GhostObject;
 import server.ServerMazeMap;
 
 import java.io.Serializable;

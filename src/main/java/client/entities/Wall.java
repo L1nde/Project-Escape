@@ -16,7 +16,7 @@ public class Wall implements MapObjects {
     public Wall(int[] cords) {
         this.cords = cords;
         try {
-            this.wall = new Image("src/main/resources/wall.png");
+            this.wall = new Image("src/main/resources/textures/wall.png");
         } catch (SlickException e) {
             throw new RuntimeException(e);
         }

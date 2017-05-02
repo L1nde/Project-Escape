@@ -1,4 +1,4 @@
-package general.Ghosts;/*
+package general.ghosts;/*
  * Created by L1ND3 on 06.04.2017. 
  */
 

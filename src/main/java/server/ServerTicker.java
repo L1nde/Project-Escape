@@ -1,8 +1,8 @@
 package server;
 
 import general.GameState;
-import general.Ghosts.GhostLinde;
-import general.Ghosts.GhostObject;
+import general.ghosts.GhostLinde;
+import general.ghosts.GhostObject;
 import general.PlayerInputState;
 import general.PlayerState;
 

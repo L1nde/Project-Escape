@@ -2,14 +2,12 @@ package client.entities;/*
  * Created by L1ND3 on 06.04.2017. 
  */
 
-import general.Ghosts.GhostObject;
+import general.ghosts.GhostObject;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
 
 
 public class Ghost {
-    private float x;
-    private float y;
     private float size = 18;
     private Image ghostTexture;
     private GhostObject ghost;
@@ -17,7 +15,7 @@ public class Ghost {
     public Ghost(GhostObject ghost) {
         this.ghost = ghost;
         try {
-            ghostTexture = new Image("src/main/resources/ghostTexture.png");
+            ghostTexture = new Image("src/main/resources/textures/ghostTexture.png");
         } catch (SlickException e) {
             throw new RuntimeException(e);
         }

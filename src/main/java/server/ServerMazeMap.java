@@ -1,13 +1,9 @@
 package server;
 
-import general.Ghosts.Tile;
+import general.ghosts.Tile;
 import general.MapUpdate;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.state.StateBasedGame;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -38,7 +34,7 @@ public class ServerMazeMap implements Serializable {
     }
 
     private String[][] readMap(String fileName) throws IOException {
-        List<String> lines = Files.readAllLines(Paths.get("src", "main", "resources", fileName));
+        List<String> lines = Files.readAllLines(Paths.get("src", "main", "resources", "maps", fileName));
         map = new String[lines.get(0).length()][lines.size()];
         for (int i = 0; i < lines.size(); i++) {
             for (int j = 0; j < lines.get(0).length(); j++) {
