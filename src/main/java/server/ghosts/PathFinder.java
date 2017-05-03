@@ -1,4 +1,4 @@
-package general.ghosts;/*
+package server.ghosts;/*
  * Created by L1ND3 on 23.04.2017. 
  */
 
@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public class PathFinderThread implements Callable<Path>{
+public class PathFinder implements Callable<Path>{
     private List<Tile> open = new ArrayList<>();
     private List<Tile> closed = new ArrayList<>();
     private Tile[][] tiles;
@@ -20,7 +20,7 @@ public class PathFinderThread implements Callable<Path>{
     private int ty;
     private String[][] map;
 
-    public PathFinderThread(int sx, int sy, int tx, int ty, ServerMazeMap map) {
+    public PathFinder(int sx, int sy, int tx, int ty, ServerMazeMap map) {
         this.tiles = new Tile[40][30];
         this.sx = sx;
         this.sy = sy;

@@ -1,10 +1,12 @@
-package general.ghosts;/*
+package general;/*
  * Created by L1ND3 on 06.04.2017. 
  */
+
 
 import java.io.Serializable;
 
 public class GhostObject implements Serializable {
+
     private float x;
     private float y;
     private boolean moving = false;

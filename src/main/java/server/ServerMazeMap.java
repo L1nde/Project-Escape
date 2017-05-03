@@ -1,6 +1,6 @@
 package server;
 
-import general.ghosts.Tile;
+
 import general.MapUpdate;
 
 import java.io.IOException;
@@ -17,7 +17,6 @@ public class ServerMazeMap implements Serializable {
     private final int height;
     private String[][] map;
     private MapUpdate mapUpdate;
-    private Tile[][] tiles;
 
     public ServerMazeMap(int width, int height) throws IOException {
         this.width = width/20;

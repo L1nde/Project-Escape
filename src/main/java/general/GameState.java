@@ -1,6 +1,5 @@
 package general;
 
-import general.ghosts.GhostObject;
 import server.ServerMazeMap;
 
 import java.io.Serializable;
@@ -64,8 +63,6 @@ public class GameState implements Serializable, Comparable<GameState>{
         if(targetTick > tick){
             for(Map.Entry<Integer, PlayerState> entry : playerStates.entrySet()){
                 entry.getValue().calculateNewPos((targetTick - tick)*timePerTick, map);
-                if (entry.getValue().getLives() == 0){
-                }
             }
             tick = targetTick;
         }

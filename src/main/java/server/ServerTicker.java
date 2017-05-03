@@ -1,8 +1,8 @@
 package server;
 
 import general.GameState;
-import general.ghosts.GhostLinde;
-import general.ghosts.GhostObject;
+import general.GhostObject;
+import server.ghosts.GhostLinde;
 import general.PlayerInputState;
 import general.PlayerState;
 
@@ -50,10 +50,7 @@ public class ServerTicker implements Runnable {
                 gameState.addGhost(newId+1, new GhostObject(20, 560, playerDefaultSpeed));
                 gameState.addGhost(newId+2, new GhostObject(760, 560, playerDefaultSpeed));
                 gameState.addGhost(newId+3, new GhostObject(760, 20, playerDefaultSpeed));
-
-
             }
-
         }
     }
 

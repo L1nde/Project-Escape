@@ -13,15 +13,16 @@ public class PlayerState implements Serializable {
     private float speed;
     private int score;
     private int lives = 3;
+    private long time = System.currentTimeMillis();
 
     private PlayerInputState input;
+
     public PlayerState(float x, float y, float speed) {
         this.x = x;
         this.y = y;
         this.speed = speed;
         input = new PlayerInputState();
     }
-
     public void reset(){
         // TODO game over
         if (lives != 0){
@@ -29,10 +30,7 @@ public class PlayerState implements Serializable {
             y = 100;
             score = 0;
             lives--;
-
         }
-
-
     }
 
     public int[][] getPosTiles(double dx, double dy) {
@@ -59,7 +57,11 @@ public class PlayerState implements Serializable {
     }
 
     public void setInput(PlayerInputState input) {
-        this.input = input;
+        if (lives != 0){
+            this.input = input;
+        } else {
+            this.input = new PlayerInputState();
+        }
     }
 
     public void calculateNewPos(float timeDelta, ServerMazeMap map){
@@ -108,6 +110,10 @@ public class PlayerState implements Serializable {
             }
             // TODO accelerated movement
         }
+    }
+
+    public long getTime() {
+        return Math.round((System.currentTimeMillis() - time)/1000);
     }
 
     public int getScore() {

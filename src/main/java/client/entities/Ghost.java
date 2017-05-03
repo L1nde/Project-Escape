@@ -2,7 +2,7 @@ package client.entities;/*
  * Created by L1ND3 on 06.04.2017. 
  */
 
-import general.ghosts.GhostObject;
+import general.GhostObject;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
 
