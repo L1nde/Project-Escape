@@ -33,16 +33,16 @@ public class Player{
         g.setColor(Color.white);
         double dx = state.getdX();
         double dy = state.getdY();
-        if (Math.round(dx) == 1) {
+        if (Math.round(dx) >= 1) {
             g.texture(new Rectangle(state.getX(), state.getY(), xSize, ySize), pacmanRightTexture, 1, 1, true);
         }
-        else if (Math.round(dx) == -1) {
+        else if (Math.round(dx) <= -1) {
             g.texture(new Rectangle(state.getX(), state.getY(), xSize, ySize), pacmanLeftTexture, 1, 1, true);
         }
-        else if (Math.round(dy) == -1) {
+        else if (Math.round(dy) <= -1) {
             g.texture(new Rectangle(state.getX(), state.getY(), xSize, ySize), pacmanUpTexture, 1, 1, true);
         }
-        else if (Math.round(dy) == 1){
+        else if (Math.round(dy) >= 1){
             g.texture(new Rectangle(state.getX(), state.getY(), xSize, ySize), pacmanDownTexture, 1, 1, true);
         }
         else{
