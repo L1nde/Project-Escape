@@ -28,6 +28,7 @@ public class ServerTicker implements Runnable {
     final private float timePerTick = 1.0f;
     private ServerMazeMap map;
     private GhostLinde pathGhosts;
+    private int ghostId;
     // Tickrate is 60 ticks/second at the moment.
 
     public ServerTicker(ServerMazeMap map) {
@@ -44,13 +45,13 @@ public class ServerTicker implements Runnable {
         synchronized (this){
             lastInputs.putIfAbsent(newId, new PlayerInputState());
             gameStateDistributor.put(newId, new LinkedBlockingQueue<>());
-            gameState.addPlayer(newId, new PlayerState(120, 180, playerDefaultSpeed));
-            if (gameState.getGhosts().size() == 0){
-                gameState.addGhost(newId, new GhostObject(20, 20, playerDefaultSpeed));
-                gameState.addGhost(newId+1, new GhostObject(20, 560, playerDefaultSpeed));
-                gameState.addGhost(newId+2, new GhostObject(760, 560, playerDefaultSpeed));
-                gameState.addGhost(newId+3, new GhostObject(760, 20, playerDefaultSpeed));
-            }
+            gameState.addPlayer(newId, new PlayerState(380, 220, playerDefaultSpeed));
+            gameState.addGhost(ghostId++, new GhostObject(20,20, playerDefaultSpeed));
+            gameState.addGhost(ghostId++, new GhostObject(20,560, playerDefaultSpeed));
+            gameState.addGhost(ghostId++, new GhostObject(760,20, playerDefaultSpeed));
+            gameState.addGhost(ghostId++, new GhostObject(760,560, playerDefaultSpeed));
+
+
         }
     }
 
