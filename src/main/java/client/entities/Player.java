@@ -44,9 +44,9 @@ public class Player{
             curTexture = pacmanRightTexture;
         } else if (Math.cos(dir) < 0 && Math.abs(Math.cos(dir)) > Math.abs(Math.sin(dir))) {
                 curTexture = pacmanLeftTexture;
-        } else if (Math.sin(dir) > 0 && Math.abs(Math.cos(dir)) < Math.abs(Math.sin(dir))) {
+        } else if (Math.sin(dir) < 0 && Math.abs(Math.cos(dir)) < Math.abs(Math.sin(dir))) {
             curTexture = pacmanUpTexture;
-        } else { // if (Math.sin(dir) < 0 && Math.abs(Math.cos(dir)) < Math.abs(Math.sin(dir))) {
+        } else { // if (Math.sin(dir) > 0 && Math.abs(Math.cos(dir)) < Math.abs(Math.sin(dir))) {
             curTexture = pacmanDownTexture;
         }
         g.texture(new Rectangle(x-xSize/2, y-ySize/2, xSize, ySize), curTexture, 1, 1, true);
