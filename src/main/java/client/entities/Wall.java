@@ -30,6 +30,8 @@ public class Wall implements MapObjects {
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) {
         g.setColor(Color.white);
-        g.texture(new Rectangle((float)loc.getX()-side/2, (float)loc.getY()-side/2, side, side), wall, 1, 1, true);
+        float x = (float) (loc.getX()*20);
+        float y = (float) (loc.getY()*20);
+        g.texture(new Rectangle(x - side/2, y - side/2, side, side), wall, 1, 1, true);
     }
 }

@@ -32,8 +32,10 @@ public class Food implements MapObjects{
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) {
         g.setColor(Color.white);
+        float x = (float) (loc.getX()*20);
+        float y = (float) (loc.getY()*20);
 //        g.texture(new Rectangle(cords[0]+4, cords[1]+6, 10, 5), foodTexture, 1, 1, true);
-        g.texture(new Circle((float)loc.getX() - radius/2, (float)loc.getY()  - radius/2, radius, radius), foodTexture, 1, 1, true);
+        g.texture(new Circle(x - radius/2, y - radius/2, radius, radius), foodTexture, 1, 1, true);
 //        g.fillOval(cords[0] + 10 - radius/2, cords[1] + 10 - radius/2, radius, radius);
     }
 }

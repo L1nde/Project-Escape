@@ -136,7 +136,7 @@ public class Player {
     }
 
     public void checkEntityCollisions(ServerGameState state){
-        if(!state.getCollidingGhosts(loc, 10).isEmpty()){
+        if(!state.getCollidingGhosts(loc, 0.5).isEmpty()){
             if(lives > 0){
                 --lives;
             }

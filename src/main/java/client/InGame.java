@@ -25,7 +25,7 @@ public class InGame extends BasicGameState {
     private Communicator communicator = null;
     private BlockingQueue<GameState> receiveData = new LinkedBlockingQueue<>();
     private BlockingQueue<PlayerInputState> sendData = new LinkedBlockingQueue<>();
-    private MazeMap map = new MazeMap(800, 600);
+    private MazeMap map = new MazeMap(40, 30);
     private StartScreen startScreen;
     private boolean pause = false;
     private Image floorTexture;

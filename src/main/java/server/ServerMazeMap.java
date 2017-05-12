@@ -18,8 +18,6 @@ public class ServerMazeMap implements Serializable {
     private TileType[][] map;
 
     public ServerMazeMap(int width, int height) {
-        width/=20;
-        height/=20;
         this.map = generateMap(width, height);
     }
 

@@ -2,6 +2,7 @@ package general;
 
 import java.io.Serializable;
 
+//Tracks centre of object
 public class Point implements Serializable{
     private double x, y;
 

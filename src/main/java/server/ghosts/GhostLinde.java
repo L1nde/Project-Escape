@@ -14,7 +14,7 @@ public class GhostLinde implements Ghost, Serializable {
     private double x;
     private double y;
     private double speed;
-    private double sideLen = 10;
+    private double sideLen = 1;
     private ServerMazeMap map;
 
     public GhostLinde(double x, double y, double speed, ServerMazeMap map) {

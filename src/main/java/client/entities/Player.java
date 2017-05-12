@@ -37,8 +37,8 @@ public class Player{
     public void render(GameContainer gc, Graphics g) {
         g.setColor(Color.white);
         double dir = state.getMovementDir();
-        float x = (float) state.getLoc().getX();
-        float y = (float) state.getLoc().getY();
+        float x = (float) (state.getLoc().getX() * 20);
+        float y = (float) (state.getLoc().getY() * 20);
         Image curTexture;
         if (Math.cos(dir) > 0 && Math.abs(Math.cos(dir)) > Math.abs(Math.sin(dir))) {
             curTexture = pacmanRightTexture;

@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+//Tracks corner of tile
 public class MapPoint {
     private final static Set<MapPoint> visited = new HashSet<>();
     private int x, y;
@@ -18,8 +19,8 @@ public class MapPoint {
         this.y = y;
     }
     public MapPoint(Point point) {
-        x = (int)(point.getX()/20);
-        y = (int)(point.getY()/20);
+        x = (int)point.getX();
+        y = (int)point.getY();
     }
 
 
@@ -95,7 +96,7 @@ public class MapPoint {
      * Returns the center of the tile
      */
     public Point getPoint(){
-        return new Point(x*20+10, y*20+10);
+        return new Point(x+0.5, y+0.5);
     }
     public int getX() {
         return x;

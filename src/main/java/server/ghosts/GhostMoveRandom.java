@@ -13,12 +13,12 @@ public class GhostMoveRandom implements Ghost {
     private double speed;
     private Point loc;
     private List<Point> path = new ArrayList<>();
-    private double sideLen = 20;
+    private double sideLen = 1;
     private ServerMazeMap map;
 
     public GhostMoveRandom(double x, double y, double speed, ServerMazeMap map) {
         loc = new Point(x, y);
-        loc = map.findRandomValidPoint(loc, 100);
+        loc = map.findRandomValidPoint(loc, 5);
         loc = new MapPoint(loc).getPoint();
         this.speed = speed;
         this.map = map;
@@ -32,7 +32,7 @@ public class GhostMoveRandom implements Ghost {
     public void calculateNewPos(double timeDelta) {
         while(timeDelta > ServerTicker.EPS){
             if(path.isEmpty()){
-                Point dest = map.findRandomValidPoint(loc, 200);
+                Point dest = map.findRandomValidPoint(loc, 10);
                 dest = new MapPoint(dest).getPoint();
                 path = map.findShortestPath(loc, dest);
             }

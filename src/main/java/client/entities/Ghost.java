@@ -27,8 +27,8 @@ public class Ghost {
 
     public void render(GameContainer container, Graphics g){
         g.setColor(Color.white);
-        float x = (float) state.getLoc().getX();
-        float y = (float) state.getLoc().getY();
+        float x = (float) (state.getLoc().getX() * 20);
+        float y = (float) (state.getLoc().getY() * 20);
         g.texture(new Rectangle(x-size/2, y-size/2, size, size), ghostTexture, 1, 1, true);
     }
 }

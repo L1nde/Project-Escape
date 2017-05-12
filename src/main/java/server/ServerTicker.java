@@ -23,12 +23,12 @@ public class ServerTicker implements Runnable {
     private final ServerMazeMap map;
     private final ServerGameState gameState;
 
-    final private double playerDefaultSpeed = 1;
-    final private double playerDefaultX = 400;
-    final private double playerDefaultY = 300;
+    final private double playerDefaultSpeed = 0.05;
+    final private double playerDefaultX = 20;
+    final private double playerDefaultY = 15;
     final private long  tickDelay = (long)1e9f/300; // in nanoseconds
-    final private double timePerTick = 0.2f;
-    final public static double EPS = 1e-8f;
+    final private double timePerTick = 0.2;
+    final public static double EPS = 1e-8;
     // Tickrate is 300 ticks/second at the moment.
 
     public ServerTicker(ServerMazeMap map) {
@@ -45,18 +45,13 @@ public class ServerTicker implements Runnable {
             lastInputs.putIfAbsent(newId, new PlayerInputState());
             gameStateDistributor.put(newId, new LinkedBlockingQueue<>());
             gameState.addPlayer(newId,
-                    new Player(map.findRandomValidPoint(new Point(playerDefaultX, playerDefaultY), 100),
+                    new Player(map.findRandomValidPoint(new Point(playerDefaultX, playerDefaultY), 5),
                     playerDefaultSpeed, 3, map));
             if (newId == 0){
-                for(int i = 0; i<5; ++i){
-                    gameState.addGhost(i, new GhostMoveRandom(500, 500, playerDefaultSpeed, map));
-                }
-                /*
-                gameState.addGhost(newId, new GhostObject(20, 20, playerDefaultSpeed));
-                gameState.addGhost(newId+1, new GhostObject(20, 560, playerDefaultSpeed));
-                gameState.addGhost(newId+2, new GhostObject(760, 560, playerDefaultSpeed));
-                gameState.addGhost(newId+3, new GhostObject(760, 20, playerDefaultSpeed));
-                */
+                gameState.addGhost(0, new GhostMoveRandom(10, 7, playerDefaultSpeed, map));
+                gameState.addGhost(1, new GhostMoveRandom(30, 7, playerDefaultSpeed, map));
+                gameState.addGhost(2, new GhostMoveRandom(10, 23, playerDefaultSpeed, map));
+                gameState.addGhost(3, new GhostMoveRandom(30, 23, playerDefaultSpeed, map));
             }
         }
     }
