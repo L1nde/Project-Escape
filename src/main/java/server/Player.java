@@ -7,15 +7,21 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Player {
+    private final Point startLoc;
+    private final Point deadLoc = new Point(-100, -100);
     private Point loc;
     private double speed;
+    private int lives;
+    private int score = 0;
     private PlayerInputState input;
     private ServerMazeMap map;
-    static int iter = 0;
+    private static int iter = 0;
 
-    public Player(Point loc, double speed, ServerMazeMap map) {
+    public Player(Point loc, double speed, int lives, ServerMazeMap map) {
+        this.startLoc = loc;
         this.loc = loc;
         this.speed = speed;
+        this.lives = lives;
         input = new PlayerInputState();
         this.map = map;
     }
@@ -126,19 +132,32 @@ public class Player {
                     timeDelta = 0;
                 }
             }
-            // TODO accelerated movement
+        }
+    }
+
+    public void checkEntityCollisions(ServerGameState state){
+        if(!state.getCollidingGhosts(loc, 10).isEmpty()){
+            if(lives > 0){
+                --lives;
+            }
+            if(lives > 0){
+                loc = startLoc;
+            } else {
+                loc = deadLoc;
+            }
         }
     }
     public List<MapUpdate> getMapUpdates(){
         List<MapUpdate> res = new ArrayList<>();
         MapPoint idx = new MapPoint(loc);
         if(map.getTile(idx) == TileType.FOOD){
+            ++score;
             res.add(new MapUpdate(idx.getX(), idx.getY(), TileType.EMPTY));
         }
         return res;
     }
 
     public PlayerState getAsState(){
-        return new PlayerState(loc, speed, input);
+        return new PlayerState(loc, speed, lives, score, input);
     }
 }

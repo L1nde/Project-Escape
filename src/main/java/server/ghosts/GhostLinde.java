@@ -1,4 +1,5 @@
-package server.Ghosts;/*
+package server.ghosts;
+/*
  * Created by L1ND3 on 06.04.2017. 
  */
 
@@ -13,6 +14,7 @@ public class GhostLinde implements Ghost, Serializable {
     private double x;
     private double y;
     private double speed;
+    private double sideLen = 10;
     private ServerMazeMap map;
 
     public GhostLinde(double x, double y, double speed, ServerMazeMap map) {
@@ -34,5 +36,10 @@ public class GhostLinde implements Ghost, Serializable {
     @Override
     public GhostState getAsState() {
         return new GhostState(new Point(x, y));
+    }
+
+    @Override
+    public double getSideLen() {
+        return sideLen;
     }
 }

@@ -4,7 +4,10 @@ import general.MapUpdate;
 import general.Point;
 import general.TileType;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -12,17 +15,19 @@ import java.util.concurrent.ThreadLocalRandom;
  * Created by Meelis Perli on 4/2/2017.
  */
 public class ServerMazeMap implements Serializable {
-    private final int width;
-    private final int height;
-    private final TileType[][] map;
+    private TileType[][] map;
 
     public ServerMazeMap(int width, int height) {
-        this.width = width/20;
-        this.height = height/20;
-        this.map = generateMap();
+        width/=20;
+        height/=20;
+        this.map = generateMap(width, height);
     }
 
-    private TileType[][] generateMap() {
+    public ServerMazeMap() throws IOException {
+        readMap("map.txt");
+    }
+
+    private TileType[][] generateMap(int width, int height) {
         TileType[][] tempMap = new TileType[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -38,6 +43,22 @@ public class ServerMazeMap implements Serializable {
             }
         }
         return tempMap;
+    }
+
+    private void readMap(String fileName) throws IOException {
+        List<String> lines = Files.readAllLines(Paths.get("src", "main", "resources", "maps", fileName));
+        String[][] mapAsStrings = new String[lines.get(0).length()][lines.size()];
+        for (int i = 0; i < lines.size(); i++) {
+            for (int j = 0; j < lines.get(0).length(); j++) {
+                mapAsStrings[j][i] = lines.get(i).substring(j,j+1);
+            }
+        }
+        map = new TileType[lines.get(0).length()][lines.size()];
+        for (int i = 0; i < mapAsStrings.length; i++) {
+            for (int j = 0; j < mapAsStrings[i].length; j++) {
+                map[i][j] = TileType.create(mapAsStrings[i][j]);
+            }
+        }
     }
 
     public TileType getTile(MapPoint toCheck){

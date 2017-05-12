@@ -1,7 +1,7 @@
 package server;
 
 import general.*;
-import server.Ghosts.Ghost;
+import server.ghosts.Ghost;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +15,8 @@ public class ServerGameState implements Comparable<ServerGameState>{
     private List<MapUpdate> mapUpdates;
     private int tick;
     final private double timePerTick;
+    private long startMillisecond;
+    private long milliseconds = 0;
     private final ServerMazeMap map;
 
     public ServerGameState(int tick, double timePerTick, ServerMazeMap map) {
@@ -24,6 +26,7 @@ public class ServerGameState implements Comparable<ServerGameState>{
         this.timePerTick = timePerTick;
         mapUpdates = map.getAsUpdates();
         this.map = map;
+        startMillisecond = System.currentTimeMillis();
     }
 
     public int getTick() {
@@ -48,20 +51,37 @@ public class ServerGameState implements Comparable<ServerGameState>{
     public void nextState(int targetTick){
         if(targetTick > tick){
             mapUpdates.clear();
-            for(Map.Entry<Integer, Player> entry : players.entrySet()){
-                entry.getValue().calculateNewPos((targetTick - tick)*timePerTick);
+            for(Player cur : players.values()){
+                cur.calculateNewPos((targetTick-tick)*timePerTick);
             }
-            for (Map.Entry<Integer, Ghost> entry : ghosts.entrySet()) {
-                entry.getValue().calculateNewPos((targetTick - tick)*timePerTick);
+            for(Ghost cur : ghosts.values()){
+                cur.calculateNewPos((targetTick-tick)*timePerTick);
             }
-            for(Map.Entry<Integer, Player> entry : players.entrySet()){
-                mapUpdates.addAll(entry.getValue().getMapUpdates());
+            for(Player cur : players.values()){
+                mapUpdates.addAll(cur.getMapUpdates());
             }
             for(MapUpdate cur : mapUpdates){
                 map.apply(cur);
             }
+            for(Player cur : players.values()){
+                cur.checkEntityCollisions(this);
+            }
             tick = targetTick;
+            milliseconds = System.currentTimeMillis() - startMillisecond;
         }
+    }
+
+    public List<Ghost> getCollidingGhosts(Point loc, double rectRange){
+        List<Ghost> res = new ArrayList<>();
+        for(Ghost cur : ghosts.values()){
+            double xDiff = Math.abs(cur.getLoc().getX() - loc.getX());
+            double yDiff = Math.abs(cur.getLoc().getY() - loc.getY());
+            double distLim = rectRange + cur.getSideLen()/2;
+            if(xDiff < distLim && yDiff < distLim){
+                res.add(cur);
+            }
+        }
+        return(res);
     }
 
     @Override
@@ -79,6 +99,6 @@ public class ServerGameState implements Comparable<ServerGameState>{
             playersTransmit.put(entry.getKey(), entry.getValue().getAsState());
         }
         return new GameState(playersTransmit, ghostsTransmit,
-                new ArrayList<>(mapUpdates), tick, timePerTick);
+                new ArrayList<MapUpdate>(mapUpdates), tick, milliseconds, timePerTick);
     }
 }

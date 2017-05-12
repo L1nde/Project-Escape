@@ -22,13 +22,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class InGame extends BasicGameState {
     private GameState gameState;
     private boolean multiplayer = true;
-    private boolean communicatorCreated = false;
+    private Communicator communicator = null;
     private BlockingQueue<GameState> receiveData = new LinkedBlockingQueue<>();
     private BlockingQueue<PlayerInputState> sendData = new LinkedBlockingQueue<>();
     private MazeMap map = new MazeMap(800, 600);
     private StartScreen startScreen;
     private boolean pause = false;
     private Image floorTexture;
+    private Music music;
 
     public InGame(StartScreen startScreen) {
         this.startScreen = startScreen;
@@ -38,15 +39,18 @@ public class InGame extends BasicGameState {
     public void init(GameContainer container, StateBasedGame game) throws SlickException{
         container.setAlwaysRender(true);
         System.out.println("init done");
-        this.floorTexture = new Image("resources/floor800x600.png");
+        this.floorTexture = new Image("src/main/resources/textures/background920x600.png");
+        music = new Music("src/main/resources/music/ElevatorMusic.ogg");
+
 
     }
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-        if (multiplayer && !communicatorCreated) {
-            new Thread(new Communicator(sendData, receiveData, startScreen.getIP())).start();
-            communicatorCreated = true;
+        if (multiplayer && communicator == null) {
+            communicator = new Communicator(sendData, receiveData, startScreen.getIP());
+            new Thread(communicator).start();
+            music.loop();
         }
         if (pause){
             pause = false;
@@ -76,16 +80,29 @@ public class InGame extends BasicGameState {
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         g.setColor(Color.white);
-        g.texture(new Rectangle(0,0,800,600), floorTexture, 1, 1,true);
+        g.texture(new Rectangle(0,0,920,600), floorTexture, 1, 1,true);
         map.render(container, game, g);
         if(gameState != null){
             for(Map.Entry<Integer, PlayerState> entry : gameState.getPlayerStates().entrySet()){
+							if (entry.getValue().getLives() != 0){
                 Player player = new Player(entry.getValue());
                 player.render(container, g);
+							}
             }
             for (Map.Entry<Integer, GhostState> entry : gameState.getGhostsStates().entrySet()) {
                 Ghost ghost = new Ghost(entry.getValue());
                 ghost.render(container, g);
+            }
+            long milliseconds = gameState.getTime();
+            long seconds = milliseconds/1000;
+            int id = communicator.getId();
+            g.drawString("Time: " + (((seconds/60)%60) <= 9 ? "0" : "") + (seconds/60)%60 + ":" + ((seconds%60) <= 9 ? "0" : "") + seconds%60, 810, 10);
+            if(id != -1){
+                if(gameState.getPlayerStates().containsKey(id)){
+                    PlayerState curPlayer = gameState.getPlayerStates().get(id);
+                    g.drawString("Lives:" + curPlayer.getLives(), 810, 30);
+                    g.drawString("Score:" + curPlayer.getScore(), 810, 50);
+                }
             }
         }
     }

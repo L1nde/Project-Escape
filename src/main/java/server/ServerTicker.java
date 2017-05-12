@@ -2,9 +2,9 @@ package server;
 
 import general.GameState;
 import general.Point;
-import server.Ghosts.GhostLinde;
+import server.ghosts.GhostLinde;
 import general.PlayerInputState;
-import server.Ghosts.GhostMoveRandom;
+import server.ghosts.GhostMoveRandom;
 
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
@@ -24,8 +24,8 @@ public class ServerTicker implements Runnable {
     private final ServerGameState gameState;
 
     final private double playerDefaultSpeed = 1;
-    final private double playerDefaultX = 100;
-    final private double playerDefaultY = 100;
+    final private double playerDefaultX = 400;
+    final private double playerDefaultY = 300;
     final private long  tickDelay = (long)1e9f/300; // in nanoseconds
     final private double timePerTick = 0.2f;
     final public static double EPS = 1e-8f;
@@ -44,11 +44,20 @@ public class ServerTicker implements Runnable {
         synchronized (this){
             lastInputs.putIfAbsent(newId, new PlayerInputState());
             gameStateDistributor.put(newId, new LinkedBlockingQueue<>());
-            gameState.addPlayer(newId, new Player(new Point(playerDefaultX, playerDefaultY), playerDefaultSpeed, map));
-            for(int i = 0; i<10; ++i){
-                gameState.addGhost(11*newId+i, new GhostMoveRandom(playerDefaultX, playerDefaultY, playerDefaultSpeed, map));
+            gameState.addPlayer(newId,
+                    new Player(map.findRandomValidPoint(new Point(playerDefaultX, playerDefaultY), 100),
+                    playerDefaultSpeed, 3, map));
+            if (newId == 0){
+                for(int i = 0; i<5; ++i){
+                    gameState.addGhost(i, new GhostMoveRandom(500, 500, playerDefaultSpeed, map));
+                }
+                /*
+                gameState.addGhost(newId, new GhostObject(20, 20, playerDefaultSpeed));
+                gameState.addGhost(newId+1, new GhostObject(20, 560, playerDefaultSpeed));
+                gameState.addGhost(newId+2, new GhostObject(760, 560, playerDefaultSpeed));
+                gameState.addGhost(newId+3, new GhostObject(760, 20, playerDefaultSpeed));
+                */
             }
-            gameState.addGhost(11*newId+10, new GhostLinde(playerDefaultX, playerDefaultY, playerDefaultSpeed, map));
         }
     }
 

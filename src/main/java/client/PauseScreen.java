@@ -1,4 +1,5 @@
-package client;/*
+package client;
+/*
  * Created by L1ND3 on 04.04.2017. 
  */
 
@@ -9,7 +10,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-public class pauseScreen extends BasicGameState {
+public class PauseScreen extends BasicGameState {
     private boolean pause = true;
 
     @Override

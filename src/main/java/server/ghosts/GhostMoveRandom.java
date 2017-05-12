@@ -1,4 +1,4 @@
-package server.Ghosts;
+package server.ghosts;
 
 import general.GhostState;
 import general.Point;
@@ -13,6 +13,7 @@ public class GhostMoveRandom implements Ghost {
     private double speed;
     private Point loc;
     private List<Point> path = new ArrayList<>();
+    private double sideLen = 20;
     private ServerMazeMap map;
 
     public GhostMoveRandom(double x, double y, double speed, ServerMazeMap map) {
@@ -24,7 +25,7 @@ public class GhostMoveRandom implements Ghost {
     }
 
     /**
-     * Repeatedly selects a random free centrepoint in some range
+     * Repeatedly selects a random free tile centre in some range
      * and moves toward it along the shortest path.
      */
     @Override
@@ -56,5 +57,10 @@ public class GhostMoveRandom implements Ghost {
     @Override
     public GhostState getAsState() {
         return new GhostState(loc);
+    }
+
+    @Override
+    public double getSideLen() {
+        return sideLen;
     }
 }

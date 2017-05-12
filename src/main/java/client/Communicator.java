@@ -20,6 +20,7 @@ public class Communicator implements Runnable {
     private BlockingQueue<GameState> receiveData;
     private BlockingQueue<PlayerInputState> sendData;
     private String ip;
+    private int id = -1;
 
     public Communicator(BlockingQueue<PlayerInputState> sendData, BlockingQueue<GameState> receiveData,
                         String ip) {
@@ -41,7 +42,10 @@ public class Communicator implements Runnable {
                     netOut.writeObject(uuid);
                     netOut.flush();
                     try(ObjectInputStream netIn = new ObjectInputStream(sock.getInputStream())){
-                        int id = netIn.readInt();
+                        int tmpId = netIn.readInt(); //Outside synchronization to avoid blocking by network.
+                        synchronized (this){
+                            id = tmpId;
+                        }
                         Sender sender = new Sender(sendData, netOut);
                         Receiver receiver = new Receiver(netIn, receiveData);
                         FutureTask senderTask = new FutureTask(sender);
@@ -73,5 +77,9 @@ public class Communicator implements Runnable {
                 throw new RuntimeException(exp);
             }
         }
+    }
+
+    public synchronized int getId() {
+        return id;
     }
 }
