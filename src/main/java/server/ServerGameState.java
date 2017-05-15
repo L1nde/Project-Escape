@@ -94,6 +94,16 @@ public class ServerGameState implements Comparable<ServerGameState>{
         return res;
     }
 
+    public List<Point> getPlayerLocations() {
+        List<Point> playerLocations = new ArrayList<>();
+        for (Player player : players.values()) {
+            if(player.isAlive()) {
+                playerLocations.add(player.getLoc());
+            }
+        }
+        return playerLocations;
+    }
+
     @Override
     public int compareTo(ServerGameState o) {
         return Integer.compare(tick, o.tick);

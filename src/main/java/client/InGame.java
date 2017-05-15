@@ -1,6 +1,7 @@
 package client;
 
 import client.entities.Ghost;
+import client.entities.GhostRusher;
 import client.entities.Player;
 import general.*;
 
@@ -90,8 +91,14 @@ public class InGame extends BasicGameState {
 							}
             }
             for (Map.Entry<Integer, GhostState> entry : gameState.getGhostsStates().entrySet()) {
-                Ghost ghost = new Ghost(entry.getValue());
-                ghost.render(container, g);
+                if (entry.getValue().getType().equals("rusher")) {
+                    GhostRusher ghost = new GhostRusher(entry.getValue());
+                    ghost.render(container, g);
+                } else {
+                    Ghost ghost = new Ghost(entry.getValue());
+                    ghost.render(container, g);
+                }
+
             }
             long milliseconds = gameState.getTime();
             long seconds = milliseconds/1000;
