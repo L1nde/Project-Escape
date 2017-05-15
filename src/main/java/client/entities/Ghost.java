@@ -2,27 +2,33 @@ package client.entities;/*
  * Created by L1ND3 on 06.04.2017. 
  */
 
-import general.GhostObject;
+import general.GhostState;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
 
 
 public class Ghost {
     private float size = 18;
-    private Image ghostTexture;
-    private GhostObject ghost;
+    private static boolean texturesLoaded = false;
+    private static Image ghostTexture;
+    private GhostState state;
 
-    public Ghost(GhostObject ghost) {
-        this.ghost = ghost;
-        try {
-            ghostTexture = new Image("src/main/resources/textures/ghostTexture.png");
-        } catch (SlickException e) {
-            throw new RuntimeException(e);
+    public Ghost(GhostState ghost) {
+        this.state = ghost;
+        if(!texturesLoaded){
+            try {
+                ghostTexture = new Image("src/main/resources/textures/ghostTexture.png");
+            } catch (SlickException e) {
+                throw new RuntimeException(e);
+            }
+            texturesLoaded = true;
         }
     }
 
     public void render(GameContainer container, Graphics g){
         g.setColor(Color.white);
-        g.texture(new Rectangle(ghost.getX(), ghost.getY(), size, size), ghostTexture, 1, 1, true);
+        float x = (float) (state.getLoc().getX() * 20);
+        float y = (float) (state.getLoc().getY() * 20);
+        g.texture(new Rectangle(x-size/2, y-size/2, size, size), ghostTexture, 1, 1, true);
     }
 }

@@ -3,21 +3,32 @@ package general;
 import java.io.Serializable;
 
 public class PlayerInputState implements Serializable{
-    private float accelerationDirection;
+    private double accelerationDirection;
     private boolean moving;
 
     public PlayerInputState() { }
 
-    public PlayerInputState(float accelerationDirection) {
+    public PlayerInputState(double accelerationDirection) {
         this.accelerationDirection = accelerationDirection;
         this.moving = true;
+    }
+
+    public void fixFormating(){
+        //sabotage protection
+        if(moving && Double.isFinite(accelerationDirection)){
+            accelerationDirection = accelerationDirection % (2*Math.PI);
+        } else {
+            moving = false;
+            accelerationDirection = 0;
+        }
+
     }
 
     public boolean isMoving() {
         return moving;
     }
 
-    public float getAccelerationDirection() {
+    public double getAccelerationDirection() {
         return accelerationDirection;
     }
 }

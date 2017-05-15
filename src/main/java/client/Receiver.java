@@ -18,7 +18,6 @@ public class Receiver implements Callable<Void>{
 
     @Override
     public Void call() throws IOException, ClassNotFoundException {
-        netIn.readObject();
         while(true){
             GameState receivedInput = (GameState) netIn.readObject();
             queueOut.add(receivedInput);

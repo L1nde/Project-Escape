@@ -1,9 +1,10 @@
 package client.entities;
 
 import client.MapObjects;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
+import general.Point;
+import org.newdawn.slick.*;
+import org.newdawn.slick.geom.Circle;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
@@ -11,18 +12,18 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 public class Food implements MapObjects{
 
-    private final int[] cords = new int[2];
+    private final Point loc;
     private final int radius = 5;
 
-    public Food(int[] cords) {
-        this.cords[0] = cords[0] + 10 - radius/2;
-        this.cords[1] = cords[1] + 10 - radius/2;
+    public Food(Point loc) {
+        this.loc = loc;
     }
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) {
-
+        float x = (float) (loc.getX()*20);
+        float y = (float) (loc.getY()*20);
         g.setColor(Color.blue);
-        g.fillRect(cords[0], cords[1], radius, radius);
+        g.fillRect(x - radius/2, y - radius/2, radius, radius);
     }
 }

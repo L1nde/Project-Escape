@@ -2,6 +2,7 @@ package client.entities;
 
 import general.PlayerState;
 import org.newdawn.slick.*;
+import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 
 
@@ -12,42 +13,42 @@ public class Player{
     private PlayerState state;
     private int xSize = 18;
     private int ySize = 18;
-    private Image pacmanRightTexture;
-    private Image pacmanLeftTexture;
-    private Image pacmanUpTexture;
-    private Image pacmanDownTexture;
+    private static boolean texturesLoaded = false;
+    private static Image pacmanRightTexture;
+    private static Image pacmanLeftTexture;
+    private static Image pacmanUpTexture;
+    private static Image pacmanDownTexture;
 
     public Player(PlayerState state) {
         this.state = state;
-        try {
-            this.pacmanRightTexture = new Image("src/main/resources/textures/pacmanRightTexture.png");
-            this.pacmanLeftTexture = new Image("src/main/resources/textures/pacmanLeftTexture.png");
-            this.pacmanUpTexture = new Image("src/main/resources/textures/pacmanUpTexture.png");
-            this.pacmanDownTexture = new Image("src/main/resources/textures/pacmanDownTexture.png");
-        } catch (SlickException e) {
-            throw new RuntimeException(e);
+        if(!texturesLoaded){
+            try {
+                pacmanRightTexture = new Image("src/main/resources/textures/pacmanRightTexture.png");
+                pacmanLeftTexture = new Image("src/main/resources/textures/pacmanLeftTexture.png");
+                pacmanUpTexture = new Image("src/main/resources/textures/pacmanUpTexture.png");
+                pacmanDownTexture = new Image("src/main/resources/textures/pacmanDownTexture.png");
+            } catch (SlickException e) {
+                throw new RuntimeException(e);
+            }
+            texturesLoaded = true;
         }
     }
 
     public void render(GameContainer gc, Graphics g) {
         g.setColor(Color.white);
-        double dx = state.getdX();
-        double dy = state.getdY();
-        if (Math.round(dx) >= 1) {
-            g.texture(new Rectangle(state.getX(), state.getY(), xSize, ySize), pacmanRightTexture, 1, 1, true);
+        double dir = state.getMovementDir();
+        float x = (float) (state.getLoc().getX() * 20);
+        float y = (float) (state.getLoc().getY() * 20);
+        Image curTexture;
+        if (Math.cos(dir) > 0 && Math.abs(Math.cos(dir)) > Math.abs(Math.sin(dir))) {
+            curTexture = pacmanRightTexture;
+        } else if (Math.cos(dir) < 0 && Math.abs(Math.cos(dir)) > Math.abs(Math.sin(dir))) {
+                curTexture = pacmanLeftTexture;
+        } else if (Math.sin(dir) < 0 && Math.abs(Math.cos(dir)) < Math.abs(Math.sin(dir))) {
+            curTexture = pacmanUpTexture;
+        } else { // if (Math.sin(dir) > 0 && Math.abs(Math.cos(dir)) < Math.abs(Math.sin(dir))) {
+            curTexture = pacmanDownTexture;
         }
-        else if (Math.round(dx) <= -1) {
-            g.texture(new Rectangle(state.getX(), state.getY(), xSize, ySize), pacmanLeftTexture, 1, 1, true);
-        }
-        else if (Math.round(dy) <= -1) {
-            g.texture(new Rectangle(state.getX(), state.getY(), xSize, ySize), pacmanUpTexture, 1, 1, true);
-        }
-        else if (Math.round(dy) >= 1){
-            g.texture(new Rectangle(state.getX(), state.getY(), xSize, ySize), pacmanDownTexture, 1, 1, true);
-        }
-        else{
-            g.texture(new Rectangle(state.getX(), state.getY(), xSize, ySize), pacmanRightTexture, 1, 1, true);
-
-        }
+        g.texture(new Rectangle(x-xSize/2, y-ySize/2, xSize, ySize), curTexture, 1, 1, true);
     }
 }
