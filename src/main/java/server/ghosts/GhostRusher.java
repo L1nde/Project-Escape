@@ -64,7 +64,7 @@ public class GhostRusher implements Ghost{
                 if (!special) {
                     for (Point playerLoc : gameState.getPlayerLocations()) {
                         if (map.canSee(loc, playerLoc)) {
-                            path = map.findShortestPath(loc, getTargetLoc(playerLoc));
+                            path = map.findShortestPath(loc, new MapPoint(getTargetLoc(playerLoc)).getPoint());
                             special = true;
                         }
                     }
