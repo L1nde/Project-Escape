@@ -17,7 +17,7 @@ public class Ghost {
         this.state = ghost;
         if(!texturesLoaded){
             try {
-                ghostTexture = new Image("resources/ghostTexture.png");
+                ghostTexture = new Image("src/main/resources/textures/ghostTexture.png");
             } catch (SlickException e) {
                 throw new RuntimeException(e);
             }

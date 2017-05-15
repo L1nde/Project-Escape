@@ -19,7 +19,7 @@ public class Wall implements MapObjects {
         this.loc = loc;
         if(!texturesLoaded){
             try {
-                this.wall = new Image("resources/wall.png");
+                this.wall = new Image("src/main/resources/textures/wall.png");
             } catch (SlickException e) {
                 throw new RuntimeException(e);
             }

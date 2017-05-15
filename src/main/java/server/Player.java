@@ -15,6 +15,7 @@ public class Player {
     private int score = 0;
     private PlayerInputState input;
     private ServerMazeMap map;
+    private double movementDir = 0;
     private static int iter = 0;
 
     public Player(Point loc, double speed, int lives, ServerMazeMap map) {
@@ -45,6 +46,7 @@ public class Player {
     public void calculateNewPos(double timeDelta){
         ++iter;
         if(input.isMoving()){
+            Point prevLoc = loc;
             while(timeDelta > ServerTicker.EPS){
                 double dx = speed * timeDelta * Math.cos(input.getAccelerationDirection());
                 double dy = speed * timeDelta * Math.sin(input.getAccelerationDirection());
@@ -132,6 +134,9 @@ public class Player {
                     timeDelta = 0;
                 }
             }
+            movementDir = Math.atan2(loc.getY()-prevLoc.getY(), loc.getX()-prevLoc.getX());
+        } else {
+            movementDir = 0;
         }
     }
 
@@ -158,7 +163,7 @@ public class Player {
     }
 
     public PlayerState getAsState(){
-        return new PlayerState(loc, speed, lives, score, input);
+        return new PlayerState(loc, speed, lives, score, movementDir, input);
     }
 
     public Boolean isAlive(){

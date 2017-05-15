@@ -23,10 +23,10 @@ public class Player{
         this.state = state;
         if(!texturesLoaded){
             try {
-                pacmanRightTexture = new Image("resources/pacmanRightTexture.png");
-                pacmanLeftTexture = new Image("resources/pacmanLeftTexture.png");
-                pacmanUpTexture = new Image("resources/pacmanUpTexture.png");
-                pacmanDownTexture = new Image("resources/pacmanDownTexture.png");
+                pacmanRightTexture = new Image("src/main/resources/textures/pacmanRightTexture.png");
+                pacmanLeftTexture = new Image("src/main/resources/textures/pacmanLeftTexture.png");
+                pacmanUpTexture = new Image("src/main/resources/textures/pacmanUpTexture.png");
+                pacmanDownTexture = new Image("src/main/resources/textures/pacmanDownTexture.png");
             } catch (SlickException e) {
                 throw new RuntimeException(e);
             }
