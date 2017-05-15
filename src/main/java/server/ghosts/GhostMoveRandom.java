@@ -3,11 +3,13 @@ package server.ghosts;
 import general.GhostState;
 import general.Point;
 import server.MapPoint;
+import server.ServerGameState;
 import server.ServerMazeMap;
 import server.ServerTicker;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GhostMoveRandom implements Ghost {
     private double speed;
@@ -15,13 +17,17 @@ public class GhostMoveRandom implements Ghost {
     private List<Point> path = new ArrayList<>();
     private double sideLen = 1;
     private ServerMazeMap map;
+    private ServerGameState gameState;
+    private static final double chaseLambda = 0.017; //Smaller values cause more chasing
+    private static final double maxRandMoveDist = 8;
 
-    public GhostMoveRandom(double x, double y, double speed, ServerMazeMap map) {
+    public GhostMoveRandom(double x, double y, double speed, ServerMazeMap map, ServerGameState gameState) {
         loc = new Point(x, y);
-        loc = map.findRandomValidPoint(loc, 5);
+        loc = map.findRandomValidPoint(loc, maxRandMoveDist /2);
         loc = new MapPoint(loc).getPoint();
         this.speed = speed;
         this.map = map;
+        this.gameState = gameState;
     }
 
     /**
@@ -32,7 +38,14 @@ public class GhostMoveRandom implements Ghost {
     public void calculateNewPos(double timeDelta) {
         while(timeDelta > ServerTicker.EPS){
             if(path.isEmpty()){
-                Point dest = map.findRandomValidPoint(loc, 10);
+                double maxChaserange = getNextExpDistr(chaseLambda);
+                Point closestPlayerLoc = gameState.getClosestPlayerLoc(loc);
+                Point dest;
+                if(closestPlayerLoc != null && loc.distance(closestPlayerLoc) <= maxChaserange){
+                    dest = closestPlayerLoc;
+                } else {
+                    dest = map.findRandomValidPoint(loc, maxRandMoveDist);
+                }
                 dest = new MapPoint(dest).getPoint();
                 path = map.findShortestPath(loc, dest);
             }
@@ -62,5 +75,8 @@ public class GhostMoveRandom implements Ghost {
     @Override
     public double getSideLen() {
         return sideLen;
+    }
+    private double getNextExpDistr(double lambda) {
+        return Math.log(1- ThreadLocalRandom.current().nextDouble())/(-lambda);
     }
 }

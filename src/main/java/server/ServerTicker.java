@@ -38,6 +38,10 @@ public class ServerTicker implements Runnable {
         this.gameStateDistributor = Collections.synchronizedMap(new HashMap<>());
         gameState = new ServerGameState(0, timePerTick, map);
         this.map = map;
+        gameState.addGhost(0, new GhostMoveRandom(10, 7, playerDefaultSpeed, map, gameState));
+        gameState.addGhost(1, new GhostMoveRandom(30, 7, playerDefaultSpeed, map, gameState));
+        gameState.addGhost(2, new GhostMoveRandom(10, 23, playerDefaultSpeed, map, gameState));
+        gameState.addGhost(3, new GhostMoveRandom(30, 23, playerDefaultSpeed, map, gameState));
     }
 
     public void addPlayer(int newId){
@@ -47,12 +51,6 @@ public class ServerTicker implements Runnable {
             gameState.addPlayer(newId,
                     new Player(map.findRandomValidPoint(new Point(playerDefaultX, playerDefaultY), 5),
                     playerDefaultSpeed, 3, map));
-            if (newId == 0){
-                gameState.addGhost(0, new GhostMoveRandom(10, 7, playerDefaultSpeed, map));
-                gameState.addGhost(1, new GhostMoveRandom(30, 7, playerDefaultSpeed, map));
-                gameState.addGhost(2, new GhostMoveRandom(10, 23, playerDefaultSpeed, map));
-                gameState.addGhost(3, new GhostMoveRandom(30, 23, playerDefaultSpeed, map));
-            }
         }
     }
 

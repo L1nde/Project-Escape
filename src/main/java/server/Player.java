@@ -160,4 +160,8 @@ public class Player {
     public PlayerState getAsState(){
         return new PlayerState(loc, speed, lives, score, input);
     }
+
+    public Boolean isAlive(){
+        return lives > 0;
+    }
 }

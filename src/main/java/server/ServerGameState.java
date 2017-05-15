@@ -84,6 +84,16 @@ public class ServerGameState implements Comparable<ServerGameState>{
         return(res);
     }
 
+    public Point getClosestPlayerLoc(Point start){
+        Point res = null;
+        for(Player cur : players.values()){
+            if(cur.isAlive() && (res == null || start.distance(cur.getLoc()) < start.distance(res))){
+                res = cur.getLoc();
+            }
+        }
+        return res;
+    }
+
     @Override
     public int compareTo(ServerGameState o) {
         return Integer.compare(tick, o.tick);
