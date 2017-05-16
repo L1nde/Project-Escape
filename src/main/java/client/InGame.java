@@ -91,7 +91,7 @@ public class InGame extends BasicGameState {
 							}
             }
             for (Map.Entry<Integer, GhostState> entry : gameState.getGhostsStates().entrySet()) {
-                if (entry.getValue().getType().equals("rusher")) {
+                if (entry.getValue().getType() == GhostType.RUSHER) {
                     GhostRusher ghost = new GhostRusher(entry.getValue());
                     ghost.render(container, g);
                 } else {

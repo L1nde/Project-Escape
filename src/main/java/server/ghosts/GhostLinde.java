@@ -5,6 +5,7 @@ package server.ghosts;
 
 
 import general.GhostState;
+import general.GhostType;
 import general.Point;
 import server.ServerMazeMap;
 
@@ -35,7 +36,7 @@ public class GhostLinde implements Ghost, Serializable {
     }
     @Override
     public GhostState getAsState() {
-        return new GhostState(new Point(x, y), "normal", false);
+        return new GhostState(new Point(x, y), GhostType.NORMAL, false);
     }
 
     @Override

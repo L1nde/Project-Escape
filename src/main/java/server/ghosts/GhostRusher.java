@@ -1,6 +1,7 @@
 package server.ghosts;
 
 import general.GhostState;
+import general.GhostType;
 import general.Point;
 import general.TileType;
 import server.MapPoint;
@@ -42,7 +43,7 @@ public class GhostRusher implements Ghost{
 
     @Override
     public GhostState getAsState() {
-        return new GhostState(loc, "rusher", special);
+        return new GhostState(loc, GhostType.RUSHER, special);
     }
 
     @Override

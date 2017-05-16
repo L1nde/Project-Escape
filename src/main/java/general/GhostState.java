@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 public class GhostState implements Serializable{
     private final Point loc;
-    private final String type;
+    private final GhostType type;
     private final boolean specialActive;
 
-    public GhostState(Point loc, String type, boolean specialActive) {
+    public GhostState(Point loc, GhostType type, boolean specialActive) {
         this.loc = loc;
         this.type = type;
         this.specialActive = specialActive;
@@ -17,7 +17,7 @@ public class GhostState implements Serializable{
         return loc;
     }
 
-    public String getType() {
+    public GhostType getType() {
         return type;
     }
 
