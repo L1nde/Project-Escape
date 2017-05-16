@@ -1,9 +1,6 @@
 package client;
 
-import client.entities.Ghost;
-import client.entities.GhostLeaper;
-import client.entities.GhostRusher;
-import client.entities.Player;
+import client.entities.*;
 import general.*;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
@@ -96,6 +93,9 @@ public class InGame extends BasicGameState {
                     ghost.render(container, g);
                 } else if (entry.getValue().getType() == GhostType.LEAPER) {
                     GhostLeaper ghost = new GhostLeaper(entry.getValue());
+                    ghost.render(container, g);
+                } else if (entry.getValue().getType() == GhostType.HUNGRY) {
+                    GhostHungry ghost = new GhostHungry(entry.getValue());
                     ghost.render(container, g);
                 } else {
                     Ghost ghost = new Ghost(entry.getValue());

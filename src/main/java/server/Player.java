@@ -1,6 +1,8 @@
 package server;
 
 import general.*;
+import server.ghosts.Ghost;
+import server.ghosts.GhostHungry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,7 @@ public class Player {
     private ServerMazeMap map;
     private double movementDir = 0;
     private static int iter = 0;
+    private double sideLen = 18;
 
     public Player(Point loc, double speed, int lives, ServerMazeMap map) {
         this.startLoc = loc;
@@ -141,7 +144,15 @@ public class Player {
     }
 
     public void checkEntityCollisions(ServerGameState state){
-        if(!state.getCollidingGhosts(loc, 0.5).isEmpty()){
+        List<Ghost> ghostList = state.getCollidingGhosts(loc, 0.5);
+        if(!ghostList.isEmpty()){
+            for (Ghost ghost : ghostList) {
+                System.out.println(ghost.getGhostType().toString());
+                if (ghost.getGhostType() == GhostType.HUNGRY) {
+                    state.addGhost(state.getGhostCount(), new GhostHungry(loc.getX(), loc.getY(), speed, map, state));
+                    break;
+                }
+            }
             if(lives > 0){
                 --lives;
             }
@@ -150,6 +161,7 @@ public class Player {
             } else {
                 loc = deadLoc;
             }
+
         }
     }
     public List<MapUpdate> getMapUpdates(){
@@ -168,5 +180,9 @@ public class Player {
 
     public Boolean isAlive(){
         return lives > 0;
+    }
+
+    public double getSideLen() {
+        return sideLen;
     }
 }

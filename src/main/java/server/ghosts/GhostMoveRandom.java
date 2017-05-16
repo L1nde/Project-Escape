@@ -21,6 +21,7 @@ public class GhostMoveRandom implements Ghost {
     private ServerGameState gameState;
     private static final double chaseLambda = 0.017; //Smaller values cause more chasing
     private static final double maxRandMoveDist = 8;
+    private final GhostType type = GhostType.NORMAL;
 
     public GhostMoveRandom(double x, double y, double speed, ServerMazeMap map, ServerGameState gameState) {
         loc = new Point(x, y);
@@ -71,7 +72,12 @@ public class GhostMoveRandom implements Ghost {
 
     @Override
     public GhostState getAsState() {
-        return new GhostState(loc, GhostType.NORMAL, false);
+        return new GhostState(loc, type, false);
+    }
+
+    @Override
+    public GhostType getGhostType() {
+        return type;
     }
 
     @Override

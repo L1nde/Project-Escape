@@ -121,4 +121,8 @@ public class ServerGameState implements Comparable<ServerGameState>{
         return new GameState(playersTransmit, ghostsTransmit,
                 new ArrayList<MapUpdate>(mapUpdates), tick, milliseconds, timePerTick);
     }
+
+    public int getGhostCount() {
+        return this.ghosts.size();
+    }
 }

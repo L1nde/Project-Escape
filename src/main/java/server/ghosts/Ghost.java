@@ -2,6 +2,7 @@ package server.ghosts;/*
  * Created by L1ND3 on 06.04.2017. 
  */
 
+import general.GhostType;
 import general.Point;
 
 public interface Ghost {
@@ -10,4 +11,5 @@ public interface Ghost {
     Point getLoc();
     double getSideLen();
     general.GhostState getAsState();
+    GhostType getGhostType();
 }

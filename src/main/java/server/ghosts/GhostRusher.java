@@ -31,7 +31,7 @@ public class GhostRusher implements Ghost{
     private boolean stunned = false;
     private double stunTime = 0;
     private double maxStunTime = 40;
-
+    private final GhostType type = GhostType.RUSHER;
 
     public GhostRusher(double x, double y, double speed, ServerMazeMap map, ServerGameState gameState) {
         loc = new Point(x, y);
@@ -44,7 +44,7 @@ public class GhostRusher implements Ghost{
 
     @Override
     public GhostState getAsState() {
-        return new GhostState(loc, GhostType.RUSHER, special);
+        return new GhostState(loc, type, special);
     }
 
     @Override
@@ -159,5 +159,10 @@ public class GhostRusher implements Ghost{
 
     private double getNextExpDistr(double lambda) {
         return Math.log(1- ThreadLocalRandom.current().nextDouble())/(-lambda);
+    }
+
+    @Override
+    public GhostType getGhostType() {
+        return type;
     }
 }

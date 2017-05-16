@@ -17,6 +17,7 @@ public class GhostLinde implements Ghost, Serializable {
     private double speed;
     private double sideLen = 1;
     private ServerMazeMap map;
+    private final GhostType type = GhostType.NORMAL;
 
     public GhostLinde(double x, double y, double speed, ServerMazeMap map) {
         this.x = x;
@@ -36,11 +37,16 @@ public class GhostLinde implements Ghost, Serializable {
     }
     @Override
     public GhostState getAsState() {
-        return new GhostState(new Point(x, y), GhostType.NORMAL, false);
+        return new GhostState(new Point(x, y), type, false);
     }
 
     @Override
     public double getSideLen() {
         return sideLen;
+    }
+
+    @Override
+    public GhostType getGhostType() {
+        return type;
     }
 }

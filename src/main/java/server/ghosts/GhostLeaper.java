@@ -28,6 +28,7 @@ public class GhostLeaper implements Ghost {
     private static final double maxRandMoveDist = 8;
     private final double sideLen = 1;
     private final int leapMaxRange = 2;
+    private final GhostType type = GhostType.LEAPER;
 
     public GhostLeaper(double x, double y, double speed, ServerMazeMap map, ServerGameState gameState) {
         loc = new Point(x, y);
@@ -78,10 +79,15 @@ public class GhostLeaper implements Ghost {
 
     @Override
     public GhostState getAsState() {
-        return new GhostState(loc, GhostType.LEAPER, special);
+        return new GhostState(loc, type, special);
     }
     private double getNextExpDistr(double lambda) {
         return Math.log(1- ThreadLocalRandom.current().nextDouble())/(-lambda);
+    }
+
+    @Override
+    public GhostType getGhostType() {
+        return type;
     }
 
     private Point leap() {
