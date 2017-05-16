@@ -21,6 +21,7 @@ public class GhostRusher implements Ghost{
     private Point loc;
     private final int rushMaxDistance = 50;
     private boolean special = false;
+    private final double sideLen = 1;
     private ServerMazeMap map;
     private ServerGameState gameState;
     private List<Point> path = new ArrayList<>();
@@ -110,7 +111,7 @@ public class GhostRusher implements Ghost{
 
     @Override
     public double getSideLen() {
-        return 0;
+        return sideLen;
     }
 
     private Point getTargetLoc(Point playerLoc) {
@@ -155,6 +156,7 @@ public class GhostRusher implements Ghost{
         }
         return null;
     }
+
     private double getNextExpDistr(double lambda) {
         return Math.log(1- ThreadLocalRandom.current().nextDouble())/(-lambda);
     }
