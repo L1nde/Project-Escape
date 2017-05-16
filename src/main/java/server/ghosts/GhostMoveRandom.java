@@ -36,6 +36,7 @@ public class GhostMoveRandom implements Ghost {
      */
     @Override
     public void calculateNewPos(double timeDelta) {
+
         while(timeDelta > ServerTicker.EPS){
             if(path.isEmpty()){
                 double maxChaserange = getNextExpDistr(chaseLambda);
@@ -69,7 +70,7 @@ public class GhostMoveRandom implements Ghost {
 
     @Override
     public GhostState getAsState() {
-        return new GhostState(loc);
+        return new GhostState(loc, "normal", false);
     }
 
     @Override

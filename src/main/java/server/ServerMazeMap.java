@@ -212,4 +212,43 @@ public class ServerMazeMap implements Serializable {
         }
         return res;
     }
+    //returns if loc2 can be seen from loc1
+    public boolean canSee(Point loc1, Point loc2) {
+        MapPoint location1 = new MapPoint(loc1);
+        MapPoint location2 = new MapPoint(loc2);
+        int dx = Math.abs(location1.getX() - location2.getX());
+        int dy = Math.abs(location1.getY() - location2.getY());
+        if (location1.getY() == location2.getY()) {
+            if (location1.getX() < location2.getX()) {
+                for (int x = 0; x < dx; x++) {
+                    if (getTile(new MapPoint(location1.getX() + x, location1.getY())) == TileType.WALL) {
+                        return false;
+                    }
+                }
+            } else {
+                for (int x = 0; x < dx; x++) {
+                    if (getTile(new MapPoint(location1.getX() - x, location1.getY())) == TileType.WALL) {
+                        return false;
+                    }
+                }
+            }
+        } else if (location1.getX() == location2.getX()){
+            if (location1.getY() < location2.getY()) {
+                for (int y = 0; y < dy; y++) {
+                    if (getTile(new MapPoint(location1.getX(), location1.getY() + y)) == TileType.WALL) {
+                        return false;
+                    }
+                }
+            } else {
+                for (int y = 0; y < dy; y++) {
+                    if (getTile(new MapPoint(location1.getX(), location1.getY() - y)) == TileType.WALL) {
+                        return false;
+                    }
+                }
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
 }

@@ -35,7 +35,7 @@ public class GhostLinde implements Ghost, Serializable {
     }
     @Override
     public GhostState getAsState() {
-        return new GhostState(new Point(x, y));
+        return new GhostState(new Point(x, y), "normal", false);
     }
 
     @Override

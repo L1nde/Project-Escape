@@ -1,12 +1,13 @@
 package server;
 
 import general.GameState;
-import general.Point;
-import server.ghosts.GhostLinde;
 import general.PlayerInputState;
-import server.ghosts.GhostMoveRandom;
+import general.Point;
+import server.ghosts.GhostRusher;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -38,10 +39,11 @@ public class ServerTicker implements Runnable {
         this.gameStateDistributor = Collections.synchronizedMap(new HashMap<>());
         gameState = new ServerGameState(0, timePerTick, map);
         this.map = map;
-        gameState.addGhost(0, new GhostMoveRandom(10, 7, playerDefaultSpeed, map, gameState));
-        gameState.addGhost(1, new GhostMoveRandom(30, 7, playerDefaultSpeed, map, gameState));
-        gameState.addGhost(2, new GhostMoveRandom(10, 23, playerDefaultSpeed, map, gameState));
-        gameState.addGhost(3, new GhostMoveRandom(30, 23, playerDefaultSpeed, map, gameState));
+        //gameState.addGhost(0, new GhostMoveRandom(10, 7, playerDefaultSpeed, map, gameState));
+        //gameState.addGhost(1, new GhostMoveRandom(30, 7, playerDefaultSpeed, map, gameState));
+        //gameState.addGhost(2, new GhostMoveRandom(10, 23, playerDefaultSpeed, map, gameState));
+        //gameState.addGhost(3, new GhostMoveRandom(30, 23, playerDefaultSpeed, map, gameState));
+        gameState.addGhost(4, new GhostRusher(20,20, playerDefaultSpeed, map, gameState));
     }
 
     public void addPlayer(int newId){
