@@ -2,10 +2,7 @@ package client;/*
  * Created by L1ND3 on 18.03.2017. 
  */
 
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -13,9 +10,11 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class Menu extends BasicGameState {
     private Rectangle playButton;
+    private Rectangle optionsButton;
     private Rectangle exitButton;
     private boolean playMP = false;
     private boolean exit = false;
+    private Image background;
 
     @Override
     public int getID() {
@@ -24,18 +23,21 @@ public class Menu extends BasicGameState {
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
-        playButton = new Rectangle(container.getWidth()/8, container.getHeight()/10, 100, 40);
-        exitButton = new Rectangle(container.getWidth()/8, container.getHeight()/10+50, 100, 40);
+        playButton = new Rectangle(75, 100, 100, 40);
+        optionsButton = new Rectangle(playButton.getX(), playButton.getY() + 50, 100, 40);
+        exitButton = new Rectangle(optionsButton.getX(), optionsButton.getY() + 50, 100, 40);
+        background = new Image("src/main/resources/textures/Menu920x600.png");
     }
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-        g.setColor(Color.blue);
-
+        g.texture(new Rectangle(0, 0, 920, 600), background, 1, 1, true);
 
         g.draw(playButton);
         g.drawString("Play", playButton.getX()+10, playButton.getY()+10);
 
+        g.draw(optionsButton);
+        g.drawString("Options", optionsButton.getX()+10, optionsButton.getY()+10);
 
         g.draw(exitButton);
         g.drawString("Exit", exitButton.getX()+10, exitButton.getY()+10);
@@ -44,6 +46,7 @@ public class Menu extends BasicGameState {
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         if (playMP){
+            playMP = false;
             game.enterState(2);
         }
         else if (exit){

@@ -27,8 +27,8 @@ public class ServerTicker implements Runnable {
     final private double playerDefaultSpeed = 0.05;
     final private double playerDefaultX = 20;
     final private double playerDefaultY = 15;
-    final private long  tickDelay = (long)1e9f/300; // in nanoseconds
-    final private double timePerTick = 0.2;
+    final private long  tickDelay = (long)1e9f/60; // in nanoseconds
+    final private double timePerTick = 1.f;
     final public static double EPS = 1e-8;
     // Tickrate is 300 ticks/second at the moment.
 
