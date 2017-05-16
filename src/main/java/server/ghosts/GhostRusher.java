@@ -26,6 +26,10 @@ public class GhostRusher implements Ghost{
     private static final double chaseLambda = 0.017; //Smaller values cause more chasing
     private static final double maxRandMoveDist = 8;
     private final int speedMultiplier = 5;
+    private boolean stunned = false;
+    private double stunTime = 0;
+    private double maxStunTime = 40;
+
 
     public GhostRusher(double x, double y, double speed, ServerMazeMap map, ServerGameState gameState) {
         loc = new Point(x, y);
@@ -43,7 +47,7 @@ public class GhostRusher implements Ghost{
 
     @Override
     public void calculateNewPos(double timeDelta) {
-        while(timeDelta > ServerTicker.EPS) {
+        while(timeDelta > ServerTicker.EPS && stunTime <= 0) {
             //uses GhostMoveRandom code, if special not activated.
             if (path.isEmpty()) {
                 double maxChaserange = getNextExpDistr(chaseLambda);
@@ -56,7 +60,12 @@ public class GhostRusher implements Ghost{
                 }
                 dest = new MapPoint(dest).getPoint();
                 path = map.findShortestPath(loc, dest);
-                special = false;
+                if (special) {
+                    special = false;
+                    stunned = true;
+                    stunTime = maxStunTime;
+                }
+
             }
 
             if (!path.isEmpty()) {
@@ -88,6 +97,9 @@ public class GhostRusher implements Ghost{
                     }
                 }
             }
+        }
+        if (stunned) {
+            stunTime -= timeDelta;
         }
     }
     @Override

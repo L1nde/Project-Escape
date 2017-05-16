@@ -1,7 +1,6 @@
-package client.MapGenerator;
+package client.mapgenerator;
 
 import java.io.*;
-import java.util.Arrays;
 
 /**
  * Created by Meelis on 10/04/2017.
