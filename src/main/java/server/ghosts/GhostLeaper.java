@@ -94,7 +94,6 @@ public class GhostLeaper implements Ghost {
                 }
             }
         }
-        System.out.println("leaped");
         return possibleLocations.get((int)(Math.random()*possibleLocations.size()));
     }
 }
