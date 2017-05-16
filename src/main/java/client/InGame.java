@@ -1,14 +1,14 @@
 package client;
 
 import client.entities.Ghost;
+import client.entities.GhostLeaper;
 import client.entities.GhostRusher;
 import client.entities.Player;
 import general.*;
-
-import general.GameState;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.state.*;
+import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -91,8 +91,11 @@ public class InGame extends BasicGameState {
 							}
             }
             for (Map.Entry<Integer, GhostState> entry : gameState.getGhostsStates().entrySet()) {
-                if (entry.getValue().getType().equals("rusher")) {
+                if (entry.getValue().getType() == GhostType.RUSHER) {
                     GhostRusher ghost = new GhostRusher(entry.getValue());
+                    ghost.render(container, g);
+                } else if (entry.getValue().getType() == GhostType.LEAPER) {
+                    GhostLeaper ghost = new GhostLeaper(entry.getValue());
                     ghost.render(container, g);
                 } else {
                     Ghost ghost = new Ghost(entry.getValue());
