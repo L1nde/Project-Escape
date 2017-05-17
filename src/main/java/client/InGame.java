@@ -40,7 +40,6 @@ public class InGame extends BasicGameState {
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException{
         container.setAlwaysRender(true);
-        System.out.println("init done");
         this.floorTexture = new Image("src/main/resources/textures/background2_920x600.png");
         music = new Music("src/main/resources/music/ElevatorMusic.ogg");
         this.exitButton = new Rectangle(container.getWidth()-110, container.getHeight()-50, 100, 40);

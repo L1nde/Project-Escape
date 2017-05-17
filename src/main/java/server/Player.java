@@ -20,6 +20,7 @@ public class Player {
     private double movementDir = 0;
     private static int iter = 0;
     private double sideLen = 18;
+    private List<Integer> hungryGhostIDs = new ArrayList<>();
 
     private boolean restart = false;
 
@@ -155,15 +156,16 @@ public class Player {
         loc = map.findRandomValidPoint(new Point(20,15), 5);
         lives = 3;
         score = 0;
+
     }
 
     public void checkEntityCollisions(ServerGameState state){
         List<Ghost> ghostList = state.getCollidingGhosts(loc, 0.5);
         if(!ghostList.isEmpty()){
             for (Ghost ghost : ghostList) {
-                System.out.println(ghost.getGhostType().toString());
                 if (ghost.getGhostType() == GhostType.HUNGRY) {
-                    state.addGhost(state.getGhostCount(), new GhostHungry(loc.getX(), loc.getY(), speed, map, state));
+                    //if id is higher than 100k, then ghost will be removed upon restart.
+                    state.addGhost(state.getGhostCount() + 100000, new GhostHungry(loc.getX(), loc.getY(), speed, map, state));
                     break;
                 }
             }

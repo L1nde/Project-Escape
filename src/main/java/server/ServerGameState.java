@@ -2,15 +2,17 @@ package server;
 
 import general.*;
 import server.ghosts.Ghost;
-import server.ghosts.GhostHungry;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 public class ServerGameState implements Comparable<ServerGameState>{
     final private Map<Integer, Player> players;
-    private final Map<Integer, Ghost> ghosts;
+    private Map<Integer, Ghost> ghosts;
     private List<MapUpdate> mapUpdates;
     private int tick;
     final private double timePerTick;
@@ -146,5 +148,14 @@ public class ServerGameState implements Comparable<ServerGameState>{
 
     public int getGhostCount() {
         return this.ghosts.size();
+    }
+
+    public Map<Integer, Ghost> getGhosts() {
+        return ghosts;
+    }
+
+    public void setGhosts(Map<Integer, Ghost> newGhosts) {
+        this.ghosts = newGhosts;
+
     }
 }
