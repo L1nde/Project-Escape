@@ -54,8 +54,7 @@ public class GhostLeaper implements Ghost {
                 }
                 dest = new MapPoint(dest).getPoint();
                 path = map.findShortestPath(loc, dest);
-            }
-            if(!path.isEmpty()){
+            } else {
                 double distNxt = loc.distance(path.get(0));
                 if(distNxt < ServerTicker.EPS){
                     path.remove(0);
@@ -91,15 +90,10 @@ public class GhostLeaper implements Ghost {
     }
 
     private Point leap() {
-        MapPoint location1 = new MapPoint(loc);
-        List<Point> possibleLocations = new ArrayList<>();
-        for (int x = -leapMaxRange; x < leapMaxRange + 1; x++) {
-            for (int y = -leapMaxRange; y < leapMaxRange + 1; y++) {
-                if (map.getTile(new MapPoint(location1.getX() + x, location1.getY() + y)) != TileType.WALL && x != 0 && y != 0) {
-                    possibleLocations.add(new Point(location1.getX() + x + 0.5, location1.getY() + y + 0.5));
-                }
-            }
-        }
-        return possibleLocations.get((int)(Math.random()*possibleLocations.size()));
+        Point endLoc;
+        do{
+            endLoc = map.findRandomValidPoint(loc, leapMaxRange);
+        } while(loc.distance(endLoc) < 1);
+        return endLoc;
     }
 }

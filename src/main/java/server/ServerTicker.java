@@ -47,8 +47,8 @@ public class ServerTicker implements Runnable {
         //gameState.addGhost(1, new GhostMoveRandom(30, 7, playerDefaultSpeed, map, gameState));
         //gameState.addGhost(2, new GhostMoveRandom(10, 23, playerDefaultSpeed, map, gameState));
         //gameState.addGhost(3, new GhostMoveRandom(30, 23, playerDefaultSpeed, map, gameState));
-        gameState.addGhost(4, new GhostRusher(20,20, playerDefaultSpeed, map, gameState));
-        //gameState.addGhost(5, new GhostLeaper(1,1, playerDefaultSpeed, map, gameState));
+        //gameState.addGhost(4, new GhostRusher(20,20, playerDefaultSpeed, map, gameState));
+        gameState.addGhost(5, new GhostLeaper(1,1, playerDefaultSpeed, map, gameState));
         //gameState.addGhost(6, new GhostHungry(30,30, playerDefaultSpeed, map, gameState));
 
 
