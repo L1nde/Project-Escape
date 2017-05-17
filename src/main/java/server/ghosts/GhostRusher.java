@@ -10,6 +10,7 @@ import server.ServerMazeMap;
 import server.ServerTicker;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -50,53 +51,49 @@ public class GhostRusher implements Ghost{
     @Override
     public void calculateNewPos(double timeDelta) {
         while(timeDelta > ServerTicker.EPS && stunTime <= 0) {
-            //uses GhostMoveRandom code, if special not activated.
+            //uses GhostMoveRandom code, if special isn't activated.
             if (path.isEmpty()) {
-                double maxChaserange = getNextExpDistr(chaseLambda);
-                Point closestPlayerLoc = gameState.getClosestPlayerLoc(loc);
-                Point dest;
-                if (closestPlayerLoc != null && loc.distance(closestPlayerLoc) <= maxChaserange) {
-                    dest = closestPlayerLoc;
-                } else {
-                    dest = map.findRandomValidPoint(loc, maxRandMoveDist);
-                }
-                dest = new MapPoint(dest).getPoint();
-                path = map.findShortestPath(loc, dest);
                 if (special) {
                     special = false;
                     stunned = true;
                     stunTime = maxStunTime;
+                } else {
+                    double maxChaseRange = getNextExpDistr(chaseLambda);
+                    Point closestPlayerLoc = gameState.getClosestPlayerLoc(loc);
+                    Point dest;
+                    if (closestPlayerLoc != null && loc.distance(closestPlayerLoc) <= maxChaseRange) {
+                        dest = closestPlayerLoc;
+                    } else {
+                        dest = map.findRandomValidPoint(loc, maxRandMoveDist);
+                    }
+                    dest = new MapPoint(dest).getPoint();
+                    path = map.findShortestPath(loc, dest);
                 }
-
-            }
-
-            if (!path.isEmpty()) {
+            } else {
                 //if ghost can see a player, then it's special will be activated
                 if (!special) {
-                    for (Point playerLoc : gameState.getPlayerLocations()) {
+                    List<Point> playerLocs = gameState.getPlayerLocations();
+                    //Check location in random order to avoid bias
+                    Collections.shuffle(playerLocs, ThreadLocalRandom.current());
+                    for (Point playerLoc : playerLocs) {
                         if (map.canSee(loc, playerLoc)) {
                             path = map.findShortestPath(loc, new MapPoint(getTargetLoc(playerLoc)).getPoint());
                             special = true;
+                            break;
                         }
                     }
-
-                    double distNxt = loc.distance(path.get(0));
-                    if (distNxt < ServerTicker.EPS) {
-                        path.remove(0);
-                    } else {
-                        double distDelta = Math.min(distNxt, speed * timeDelta);
-                        timeDelta -= distDelta / (speed);
-                        loc = loc.moveTowards(path.get(0), distDelta);
-                    }
+                }
+                double curSpeed = speed;
+                if(special){
+                    curSpeed *= speedMultiplier;
+                }
+                double distNxt = loc.distance(path.get(0));
+                if (distNxt < ServerTicker.EPS) {
+                    path.remove(0);
                 } else {
-                    double distNxt = loc.distance(path.get(0));
-                    if (distNxt < ServerTicker.EPS) {
-                        path.remove(0);
-                    } else {
-                        double distDelta = Math.min(distNxt, speed*speedMultiplier* timeDelta);
-                        timeDelta -= distDelta / (speed*speedMultiplier);
-                        loc = loc.moveTowards(path.get(0), distDelta);
-                    }
+                    double distDelta = Math.min(distNxt, curSpeed * timeDelta);
+                    timeDelta -= distDelta / (curSpeed);
+                    loc = loc.moveTowards(path.get(0), distDelta);
                 }
             }
         }

@@ -41,18 +41,17 @@ public class GhostMoveRandom implements Ghost {
 
         while(timeDelta > ServerTicker.EPS){
             if(path.isEmpty()){
-                double maxChaserange = getNextExpDistr(chaseLambda);
+                double maxChaseRange = getNextExpDistr(chaseLambda);
                 Point closestPlayerLoc = gameState.getClosestPlayerLoc(loc);
                 Point dest;
-                if(closestPlayerLoc != null && loc.distance(closestPlayerLoc) <= maxChaserange){
+                if(closestPlayerLoc != null && loc.distance(closestPlayerLoc) <= maxChaseRange){
                     dest = closestPlayerLoc;
                 } else {
                     dest = map.findRandomValidPoint(loc, maxRandMoveDist);
                 }
                 dest = new MapPoint(dest).getPoint();
                 path = map.findShortestPath(loc, dest);
-            }
-            if(!path.isEmpty()){
+            } else {
                 double distNxt = loc.distance(path.get(0));
                 if(distNxt < ServerTicker.EPS){
                     path.remove(0);
