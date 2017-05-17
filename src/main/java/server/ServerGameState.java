@@ -2,11 +2,10 @@ package server;
 
 import general.*;
 import server.ghosts.Ghost;
+import server.ghosts.GhostHungry;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
 public class ServerGameState implements Comparable<ServerGameState>{
@@ -18,6 +17,9 @@ public class ServerGameState implements Comparable<ServerGameState>{
     private long startMillisecond;
     private long milliseconds = 0;
     private final ServerMazeMap map;
+    private final ServerMazeMap newMap;
+
+
 
     public ServerGameState(int tick, double timePerTick, ServerMazeMap map) {
         this.players = new HashMap<>();
@@ -27,6 +29,11 @@ public class ServerGameState implements Comparable<ServerGameState>{
         mapUpdates = map.getAsUpdates();
         this.map = map;
         startMillisecond = System.currentTimeMillis();
+        try {
+            this.newMap = new ServerMazeMap();
+        } catch (IOException e) {
+            throw new RuntimeException("Can't find map");
+        }
     }
 
     public int getTick() {
@@ -51,6 +58,21 @@ public class ServerGameState implements Comparable<ServerGameState>{
     public void nextState(int targetTick){
         if(targetTick > tick){
             mapUpdates.clear();
+            if (milliseconds > 120){
+                for (Player player : players.values()) { // resets map and player TODO reset ghosts(and better reset)
+                    if (player.isRestart()){
+                        mapUpdates = newMap.getAsUpdates();
+                        for (Player cur : players.values()) {
+                            cur.reset();
+                        }
+                        startMillisecond = System.currentTimeMillis();
+                        for (Ghost ghost : ghosts.values()) {
+                            ghost.reset();
+                        }
+                        break;
+                    }
+                }
+            }
             for(Player cur : players.values()){
                 cur.calculateNewPos((targetTick-tick)*timePerTick);
             }

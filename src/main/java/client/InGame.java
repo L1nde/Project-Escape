@@ -27,10 +27,11 @@ public class InGame extends BasicGameState {
     private StartScreen startScreen;
     private boolean pause = false;
     private boolean exit = false;
+    private boolean restart = false;
     private Image floorTexture;
     private Music music;
     private Rectangle exitButton;
-    private Rectangle saveButton;
+    private Rectangle restartButton;
 
     public InGame(StartScreen startScreen) {
         this.startScreen = startScreen;
@@ -43,7 +44,7 @@ public class InGame extends BasicGameState {
         this.floorTexture = new Image("src/main/resources/textures/background2_920x600.png");
         music = new Music("src/main/resources/music/ElevatorMusic.ogg");
         this.exitButton = new Rectangle(container.getWidth()-110, container.getHeight()-50, 100, 40);
-        this.saveButton = new Rectangle(exitButton.getX(), exitButton.getY() - 50, 100, 40);
+        this.restartButton = new Rectangle(exitButton.getX(), exitButton.getY() - 50, 100, 40);
     }
 
     @Override
@@ -74,6 +75,10 @@ public class InGame extends BasicGameState {
             }
         }
         PlayerInputState freshInput = PlayerInputReceiver.receive(container);
+        if (restart){
+            restart = false;
+            freshInput.setRestart();
+        }
         sendData.add(freshInput);
     }
 
@@ -82,7 +87,7 @@ public class InGame extends BasicGameState {
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         if (exit){
             exit = false;
-            game.enterState(1);
+            container.exit();
         }
         g.setColor(Color.white);
         g.texture(new Rectangle(0,0,920,600), floorTexture, 1, 1,true);
@@ -90,8 +95,8 @@ public class InGame extends BasicGameState {
         g.draw(exitButton);
         g.drawString("Exit", exitButton.getX() + 10, exitButton.getY() + 10);
 
-        g.draw(saveButton);
-        g.drawString("Save", saveButton.getX() + 10, saveButton.getY() + 10);
+        g.draw(restartButton);
+        g.drawString("Restart", restartButton.getX() + 10, restartButton.getY() + 10);
 
         map.render(container, game, g);
         if(gameState != null){
@@ -141,6 +146,8 @@ public class InGame extends BasicGameState {
     public void mousePressed(int button, int x, int y) {
         if (button == 0 && x >= exitButton.getX() && x <= exitButton.getMaxX() && y >= exitButton.getY() && y <= exitButton.getMaxY()) {
             exit = true;
+        } else if (button == 0 && x >= restartButton.getX() && x <= restartButton.getMaxX() && y >= restartButton.getY() && y <= restartButton.getMaxY()) {
+            restart = true;
         }
     }
 

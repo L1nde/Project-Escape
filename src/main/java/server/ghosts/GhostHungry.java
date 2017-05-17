@@ -11,7 +11,7 @@ import server.ServerMazeMap;
 public class GhostHungry extends GhostMoveRandom {
 
     private final GhostType type = GhostType.HUNGRY;
-    public GhostHungry(double x, double y, double speed, ServerMazeMap map, ServerGameState gameState) {
+    public GhostHungry(double x, double y, double speed, ServerMazeMap map, ServerGameState gameState ) {
         super(x, y, speed, map, gameState);
     }
 
