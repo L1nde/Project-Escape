@@ -147,7 +147,6 @@ public class Player {
         List<Ghost> ghostList = state.getCollidingGhosts(loc, 0.5);
         if(!ghostList.isEmpty()){
             for (Ghost ghost : ghostList) {
-                System.out.println(ghost.getGhostType().toString());
                 if (ghost.getGhostType() == GhostType.HUNGRY) {
                     state.addGhost(state.getGhostCount(), new GhostHungry(loc.getX(), loc.getY(), speed, map, state));
                     break;
