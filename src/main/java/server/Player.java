@@ -58,9 +58,9 @@ public class Player {
                     //Direction prioritization to enter door like places easier.
                     //Moving in both directions at once may move into wall.
                     boolean bias = Math.abs(dx) > Math.abs(dy);
-                    //Use random to be unbiased on diagonal movement.
+                    //Use orthogonal to previous movement bias on near diagonal movement.
                     if(Math.abs(Math.abs(dx/dy) - 1) < 0.05){
-                        bias = ThreadLocalRandom.current().nextBoolean();
+                        bias = Math.abs(Math.cos(movementDir)) < Math.abs(Math.sin(movementDir));
                     }
                     if(bias){
                         cdx = Math.copySign(Math.min(map.getFreeXRange(loc, dx), Math.abs(dx)), dx);
