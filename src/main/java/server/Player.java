@@ -6,7 +6,6 @@ import server.ghosts.GhostHungry;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Player {
     private final Point startLoc;
