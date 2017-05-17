@@ -3,6 +3,7 @@ package server;
 import general.*;
 import server.ghosts.Ghost;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,13 +12,16 @@ import java.util.concurrent.ConcurrentMap;
 
 public class ServerGameState implements Comparable<ServerGameState>{
     final private Map<Integer, Player> players;
-    private final Map<Integer, Ghost> ghosts;
+    private Map<Integer, Ghost> ghosts;
     private List<MapUpdate> mapUpdates;
     private int tick;
     final private double timePerTick;
     private long startMillisecond;
     private long milliseconds = 0;
     private final ServerMazeMap map;
+    private final ServerMazeMap newMap;
+
+
 
     public ServerGameState(int tick, double timePerTick, ServerMazeMap map) {
         this.players = new HashMap<>();
@@ -27,6 +31,11 @@ public class ServerGameState implements Comparable<ServerGameState>{
         mapUpdates = map.getAsUpdates();
         this.map = map;
         startMillisecond = System.currentTimeMillis();
+        try {
+            this.newMap = new ServerMazeMap();
+        } catch (IOException e) {
+            throw new RuntimeException("Can't find map");
+        }
     }
 
     public int getTick() {
@@ -51,6 +60,21 @@ public class ServerGameState implements Comparable<ServerGameState>{
     public void nextState(int targetTick){
         if(targetTick > tick){
             mapUpdates.clear();
+            if (milliseconds > 120){
+                for (Player player : players.values()) { // resets map and player TODO reset ghosts(and better reset)
+                    if (player.isRestart()){
+                        mapUpdates = newMap.getAsUpdates();
+                        for (Player cur : players.values()) {
+                            cur.reset();
+                        }
+                        startMillisecond = System.currentTimeMillis();
+                        for (Ghost ghost : ghosts.values()) {
+                            ghost.reset();
+                        }
+                        break;
+                    }
+                }
+            }
             for(Player cur : players.values()){
                 cur.calculateNewPos((targetTick-tick)*timePerTick);
             }
@@ -124,5 +148,14 @@ public class ServerGameState implements Comparable<ServerGameState>{
 
     public int getGhostCount() {
         return this.ghosts.size();
+    }
+
+    public Map<Integer, Ghost> getGhosts() {
+        return ghosts;
+    }
+
+    public void setGhosts(Map<Integer, Ghost> newGhosts) {
+        this.ghosts = newGhosts;
+
     }
 }

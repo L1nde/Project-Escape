@@ -65,6 +65,13 @@ public class GhostMoveRandom implements Ghost {
     }
 
     @Override
+    public void reset(){
+        loc = map.findRandomValidPoint(new Point(20, 15), 15);
+        path.clear();
+    }
+
+
+    @Override
     public Point getLoc() {
         return loc;
     }

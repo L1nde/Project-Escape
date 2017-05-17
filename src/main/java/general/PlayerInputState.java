@@ -6,6 +6,8 @@ public class PlayerInputState implements Serializable{
     private double accelerationDirection;
     private boolean moving;
 
+    private boolean restart = false;
+
     public PlayerInputState() { }
 
     public PlayerInputState(double accelerationDirection) {
@@ -21,11 +23,18 @@ public class PlayerInputState implements Serializable{
             moving = false;
             accelerationDirection = 0;
         }
-
     }
 
     public boolean isMoving() {
         return moving;
+    }
+
+    public boolean isRestart() {
+        return restart;
+    }
+
+    public void setRestart() {
+        this.restart = true;
     }
 
     public double getAccelerationDirection() {

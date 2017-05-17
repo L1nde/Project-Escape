@@ -107,6 +107,12 @@ public class GhostRusher implements Ghost{
     }
 
     @Override
+    public void reset(){
+        loc = map.findRandomValidPoint(new Point(20, 15), 15);
+        path.clear();
+    }
+
+    @Override
     public double getSideLen() {
         return sideLen;
     }

@@ -20,6 +20,9 @@ public class Player {
     private double movementDir = 0;
     private static int iter = 0;
     private double sideLen = 18;
+    private List<Integer> hungryGhostIDs = new ArrayList<>();
+
+    private boolean restart = false;
 
     public Player(Point loc, double speed, int lives, ServerMazeMap map) {
         this.startLoc = loc;
@@ -36,6 +39,7 @@ public class Player {
 
     public void setInput(PlayerInputState input) {
         this.input = input;
+        this.restart = input.isRestart();
     }
 
     public double getMovementDir(){
@@ -44,6 +48,10 @@ public class Player {
 
     public Point getLoc() {
         return loc;
+    }
+
+    public void setLoc(Point loc) {
+        this.loc = loc;
     }
 
     public void calculateNewPos(double timeDelta){
@@ -63,6 +71,7 @@ public class Player {
                         bias = Math.abs(Math.cos(movementDir)) < Math.abs(Math.sin(movementDir));
                     }
                     if(bias){
+
                         cdx = Math.copySign(Math.min(map.getFreeXRange(loc, dx), Math.abs(dx)), dx);
                         loc = new Point(loc.getX() + cdx, loc.getY());
                         cdy = Math.copySign(Math.min(map.getFreeYRange(loc, dy), Math.abs(dy)), dy);
@@ -143,12 +152,20 @@ public class Player {
         }
     }
 
+    public void reset(){
+        loc = map.findRandomValidPoint(new Point(20,15), 5);
+        lives = 3;
+        score = 0;
+
+    }
+
     public void checkEntityCollisions(ServerGameState state){
         List<Ghost> ghostList = state.getCollidingGhosts(loc, 0.5);
         if(!ghostList.isEmpty()){
             for (Ghost ghost : ghostList) {
                 if (ghost.getGhostType() == GhostType.HUNGRY) {
-                    state.addGhost(state.getGhostCount(), new GhostHungry(loc.getX(), loc.getY(), speed, map, state));
+                    //if id is higher than 100k, then ghost will be removed upon restart.
+                    state.addGhost(state.getGhostCount() + 100000, new GhostHungry(loc.getX(), loc.getY(), speed, map, state));
                     break;
                 }
             }
@@ -163,6 +180,11 @@ public class Player {
 
         }
     }
+
+    public boolean isRestart() {
+        return restart;
+    }
+
     public List<MapUpdate> getMapUpdates(){
         List<MapUpdate> res = new ArrayList<>();
         MapPoint idx = new MapPoint(loc);
@@ -171,6 +193,7 @@ public class Player {
             res.add(new MapUpdate(idx.getX(), idx.getY(), TileType.EMPTY));
         }
         return res;
+
     }
 
     public PlayerState getAsState(){

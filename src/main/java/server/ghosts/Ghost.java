@@ -12,4 +12,5 @@ public interface Ghost {
     double getSideLen();
     general.GhostState getAsState();
     GhostType getGhostType();
+    void reset();
 }
